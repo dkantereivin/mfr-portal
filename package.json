@@ -37,6 +37,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@prisma/client": "^4.9.0",
+		"dayjs": "^1.11.7",
 		"googleapis": "^110.0.0"
 	}
 }
