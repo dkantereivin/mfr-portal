@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import dayjs from 'dayjs';
 
 interface CookieOptions {
@@ -70,9 +71,17 @@ export function hardCookie(
     });
 }
 
-export const HARDENED_COOKIE = {
+export const standardCookie = () => ({
+    path: '/',
+    secure: !dev
+})
+
+export const hardenedCookie = () => ({
     path: '/',
     httpOnly: true,
-    secure: true,
-    expires: dayjs().add(12 * 7, 'hours').toDate(),
-};
+    secure: !dev,
+    expires: dayjs().add(7, 'days').toDate(),
+});
+
+export const SESSION_COOKIE_ID = "mfr_session";
+export const LOGIN_REDIRECT_TO = "LOGIN_REDIRECT_TO"

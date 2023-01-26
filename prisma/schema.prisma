@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = [ "extendedWhereUnique" ]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  NONE
+  APPRENTICE
+  MEMBER
+  CORPORAL
+  SERGEANT
+  DEPUTY_CHIEF
+  UNIT_CHIEF
+  SUPER_ADMIN
+}
+
+enum LeadershipDepartment {
+  TRAINING
+  OPERATIONS
+  ADMINISTRATION
+  ALL
+}
+
+model User {
+  id String @id @default(cuid())
+  googleId String @unique
+  contId String? @unique
+  email String @unique
+  firstName String?
+  lastName String?
+
+  role Role @default(NONE)
+  dept LeadershipDepartment?
+
+  sessions Session[]
+  attendance Attendance[]
+
+  refreshToken String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Session {
+  id String @id @default(cuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model AttendanceCode {
+  id String @id @default(cuid())
+  code String @unique
+
+  officerId String // no need for a relation, just worth tracking who created it
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Attendance {
+  id String @id @default(cuid())
+
+  code String
+  time DateTime @default(now())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+}

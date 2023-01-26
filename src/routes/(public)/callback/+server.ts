@@ -3,9 +3,8 @@ import { error, json, redirect } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { client } from "$lib/server/googleAuth";
 import { db } from "$lib/server/db";
-import { HARDENED_COOKIE } from "$lib/utils/cookies";
+import { SESSION_COOKIE_ID, hardenedCookie, LOGIN_REDIRECT_TO } from "$lib/utils/cookies";
 import dayjs from "dayjs";
-
 
 export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     const code = url.searchParams.get("code");
@@ -25,9 +24,6 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     const {data} = await oauth2.userinfo.v2.me.get();
     const {refresh_token} = tokens;
 
-    if (!refresh_token) {
-        throw error(400, "No refresh token provided by Google.");
-    }
     if (!data.email) {
         throw error(400, "No email provided by Google.");
     }
@@ -39,12 +35,24 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     });
 
     if (!user) {
+        if (!refresh_token) {
+            throw error(400, "No refresh token provided by Google.");
+        }
         user = await db.user.create({
             data: {
                 googleId: data.id!,
                 email: data.email,
                 firstName: data.given_name,
                 lastName: data.family_name,
+                refreshToken: refresh_token
+            }
+        });
+    } else if (refresh_token) { // user exists but Google has sent a new refresh token
+        await db.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
                 refreshToken: refresh_token
             }
         });
@@ -59,6 +67,9 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
         }
     });
 
-    cookies.set("session", session.id, HARDENED_COOKIE);
-    throw redirect(302, "/");
+    cookies.set(SESSION_COOKIE_ID, session.id, hardenedCookie());
+
+    const redirectTo = cookies.get(LOGIN_REDIRECT_TO) ?? "/dashboard";
+    cookies.delete(LOGIN_REDIRECT_TO, {path: '/'});
+    throw redirect(302, redirectTo);
 }
