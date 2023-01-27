@@ -59,6 +59,7 @@ model Session {
 model AttendanceCode {
   id String @id @default(cuid())
   code String @unique
+  custom Boolean @default(false)
 
   officerId String // no need for a relation, just worth tracking who created it
   expiresAt DateTime

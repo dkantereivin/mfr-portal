@@ -1,6 +1,5 @@
-import type {PageLoad} from './$types';
-import type {Load} from '@sveltejs/kit';
-import { LOGIN_REDIRECT_TO, SESSION_COOKIE_ID, standardCookie } from '$lib/utils/cookies';
+import type {LayoutServerLoad} from './$types';
+import { LOGIN_REDIRECT_TO, standardCookie } from '$lib/utils/cookies';
 import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({cookies, url, locals}) => {
@@ -16,4 +15,4 @@ export const load = (async ({cookies, url, locals}) => {
         user: locals.user
     };
     
-}) satisfies Load;
+}) satisfies LayoutServerLoad;
