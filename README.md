@@ -1,3 +1,9 @@
+# Color Theme Info
+#363636 BLACK
+#ffffff WHITE
+1st SJA green #0ca053
+2nd yellow #ede822 3rd turqoise 1ea5a0
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
