@@ -1,17 +1,18 @@
 import { google } from "googleapis";
-import { error, json, redirect } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { client } from "$lib/server/googleAuth";
 import { db } from "$lib/server/db";
 import { SESSION_COOKIE_ID, hardenedCookie, LOGIN_REDIRECT_TO } from "$lib/utils/cookies";
 import dayjs from "dayjs";
+import {MasterSheet} from '$lib/server/sheets/master';
 
 export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     const code = url.searchParams.get("code");
 
     if (url.searchParams.get("error") || !code) {
         throw error(400, "Error authenticating with Google.");
-    };
+    }
 
     const {tokens} = await client.getToken(code);
     client.setCredentials(tokens);
@@ -38,12 +39,14 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
         if (!refresh_token) {
             throw error(400, "No refresh token provided by Google.");
         }
+        const sjaInfo = await MasterSheet.getUserData(data.email);
         user = await db.user.create({
             data: {
-                googleId: data.id!,
-                email: data.email,
                 firstName: data.given_name,
                 lastName: data.family_name,
+                ...sjaInfo,
+                googleId: data.id!,
+                email: data.email,
                 refreshToken: refresh_token
             }
         });
