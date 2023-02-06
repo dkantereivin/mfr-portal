@@ -2,7 +2,7 @@
 CREATE TYPE "Role" AS ENUM ('NONE', 'APPRENTICE', 'MEMBER', 'CORPORAL', 'SERGEANT', 'DEPUTY_CHIEF', 'UNIT_CHIEF', 'SUPER_ADMIN');
 
 -- CreateEnum
-CREATE TYPE "LeadershipDepartment" AS ENUM ('TRAINING', 'OPERATIONS', 'ADMINISTRATION', 'ALL');
+CREATE TYPE "LeadershipDepartment" AS ENUM ('NONE', 'TRAINING', 'OPERATIONS', 'ADMINISTRATION', 'ALL');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -12,7 +12,7 @@ CREATE TABLE "User" (
     "firstName" TEXT,
     "lastName" TEXT,
     "role" "Role" NOT NULL DEFAULT 'NONE',
-    "dept" "LeadershipDepartment",
+    "dept" "LeadershipDepartment" NOT NULL DEFAULT 'NONE',
     "refreshToken" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

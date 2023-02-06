@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  previewFeatures = [ "extendedWhereUnique" ]
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedWhereUnique"]
 }
 
 datasource db {
@@ -20,24 +20,29 @@ enum Role {
 }
 
 enum LeadershipDepartment {
+  NONE
   TRAINING
   OPERATIONS
   ADMINISTRATION
   ALL
 }
 
+enum TagActions {
+  ATTENDANCE
+}
+
 model User {
-  id String @id @default(cuid())
-  googleId String @unique
-  contId String? @unique
-  email String @unique
+  id        String  @id @default(cuid())
+  googleId  String  @unique
+  contId    String? @unique
+  email     String  @unique
   firstName String?
-  lastName String?
+  lastName  String?
 
-  role Role @default(NONE)
-  dept LeadershipDepartment?
+  role Role                 @default(NONE)
+  dept LeadershipDepartment @default(NONE)
 
-  sessions Session[]
+  sessions   Session[]
   attendance Attendance[]
 
   refreshToken String
@@ -50,15 +55,15 @@ model Session {
   id String @id @default(cuid())
 
   userId String
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
 
 model AttendanceCode {
-  id String @id @default(cuid())
-  code String @unique
+  id     String  @id @default(cuid())
+  code   String  @unique
   custom Boolean @default(false)
 
   officerId String // no need for a relation, just worth tracking who created it
@@ -69,9 +74,20 @@ model AttendanceCode {
 model Attendance {
   id String @id @default(cuid())
 
-  code String
+  code String // an AttendanceCode, a user, or an NFC tag
   time DateTime @default(now())
 
   userId String
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model NfcTag {
+  uid         String     @id
+  count       Int        @default(0)
+  lastUsed    DateTime
+  name        String
+  action      TagActions
+  description String?
+  payload     String
+  versionCode String
 }

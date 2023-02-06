@@ -3,7 +3,13 @@ import { Prisma, PrismaClient, Role, LeadershipDepartment, User, Attendance, Att
 import { parse } from 'yaml';
 import { readFileSync } from 'fs';
 import _ from 'lodash';
-import {randomString} from '../src/lib/utils/misc';
+const crypto = require('crypto');
+
+export const randomString = (length: number): string => {
+    const arr = new Uint8Array(length / 2);
+    crypto.getRandomValues(arr);
+    return Array.from(arr, (dec) => dec.toString(16).padStart(2, '0')).join('')
+}
 
 const prisma = new PrismaClient();
 
@@ -12,6 +18,8 @@ const rawQueries: any[] = [];
 type StaticContent = {
     users: Prisma.UserCreateInput[];
     codes: Prisma.AttendanceCodeCreateInput[];
+
+    nfcTags: Prisma.NfcTagCreateInput[];
 }
 
 const staticContent: StaticContent = parse(readFileSync('prisma/seed.yaml', 'utf8'));
@@ -25,6 +33,9 @@ export const seed = async () => {
 
     const codes = await seedAttendanceCodes(10, users);
     console.log(`Seeded ${codes.length} attendance codes`);
+
+    const tags = await seedNFCTags();
+    console.log(`Seeded ${tags.length} NFC tags`);
 }
 
 export const seedUsers = async (randomCnt: number) => {
@@ -92,6 +103,14 @@ export const seedAttendance = async (randomCnt: number, codes: AttendanceCode[],
     })
 
     return prisma.attendance.findMany();
+}
+
+export const seedNFCTags = async () => {
+    const tags = staticContent.nfcTags;
+    await prisma.nfcTag.createMany({
+        data: tags
+    });
+    return prisma.nfcTag.findMany()
 }
 
 
