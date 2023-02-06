@@ -1,39 +1,28 @@
 <script lang='ts'>
 	import { enhance } from '$app/forms';
-    import dayjs from 'dayjs';
+    import {Label, Input, Button, Helper} from 'flowbite-svelte';
 	import type { PageData } from './$types';
-
-    const NFC = false;
-
-    const DATE_FORMAT = 'dd, D MMMM YYYY';
-
     export let data: PageData;
 </script>
 
-<main class="container sm:border mx-auto">
-    <h2 class="text-md">Current Date</h2>
-    <h1 class="text-2xl">{dayjs().format(DATE_FORMAT)}</h1>
+<main class="container sm:border mx-auto p-4">
+    <img src="/icons/training.png" alt="Verification Code" class="mx-auto w-1/2 md:w-1/4 lg:w-1/6" />
+    <h1 class="text-2xl">To Check In:</h1>
+    <ol class="text-left list-decimal pl-[2.5em]">
+        <li>Hold your phone near the attendance card.</li>
+        <li>Scan a QR code from SJA Leadership.</li>
+        <li>Manually enter an attendance code from leadership.</li>
+    </ol>
 
-    <!-- switch for small screens between NFC and code -->
-    <div>
-        {#if NFC}
-            <section>
-                NFC
-            </section>
-        {/if}
-        <section class="md:container md:mx-auto md:border">
-            <form method="GET" use:enhance>
-                <input name="code" type="text" placeholder="Enter Code" value={data?.code ?? ''}/>
-                <button type="submit">Submit</button>
-            </form>
-            {#if data?.success}
-            <h1>Thanks for attending training!</h1>
-            <p>Your attendance has been successfully logged at {dayjs(data.time).format(DATE_FORMAT)}.</p>
-            {:else if data?.error}
-            <h1>{data?.error} Please try again.</h1>
+    <form method="GET" class="border p-2 mt-5 sm:border-0 sm:w-1/2" use:enhance>
+        <Label class="space-y-2 mb-2">
+            <span class="text-lg">Attendance Code</span>
+            <Input color="{data?.error ? 'red' : ''}" name="code" type="text" placeholder="Enter Code" vallue="{data?.code ?? ''}"/>
+            {#if data?.error}
+                <Helper class="mt-2" color="red"><span class="font-bold">{data?.error}</span> Please try again.</Helper>
             {/if}
-        </section>
-        
-    </div>
-    
+        </Label>
+        <Button type="submit">Submit</Button>
+    </form>
+
 </main>

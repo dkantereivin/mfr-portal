@@ -1,15 +1,12 @@
 import type {PageServerLoad} from './$types';
 import {db} from '$lib/server/db';
 import { Role } from '@prisma/client';
-import { getRank } from '$lib/server/auth';
-import { error } from '@sveltejs/kit';
+import { requireRank } from '$lib/server/auth';
 import { randomString } from '$lib/utils/misc';
 import dayjs from 'dayjs';
 
 export const load = (async ({locals}) => {
-    if (getRank(locals.user!.role) < getRank(Role.CORPORAL)) {
-        throw error(403, 'This page can only be accessed by Corporals and above.');
-    }
+    requireRank(locals.user!, Role.CORPORAL);
 
     const existingCode = await db.attendanceCode.findFirst({
         where: {
