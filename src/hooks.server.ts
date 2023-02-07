@@ -4,7 +4,7 @@ import type {Handle} from '@sveltejs/kit';
 
 
 export const handle = (async ({ event, resolve }) => {
-    const sessionId = event.cookies.get(SESSION_COOKIE_ID);
+    const sessionId = event.cookies.get(SESSION_COOKIE_ID, {path: '/'});
     if (!sessionId) {
         event.locals.authenticated = false;
         return resolve(event);

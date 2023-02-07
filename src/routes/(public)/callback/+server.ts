@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import { error, redirect } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
-import { client } from "$lib/server/googleAuth";
+import { createClient } from "$lib/server/googleAuth";
 import { db } from "$lib/server/db";
 import { SESSION_COOKIE_ID, hardenedCookie, LOGIN_REDIRECT_TO } from "$lib/utils/cookies";
 import dayjs from "dayjs";
@@ -13,6 +13,8 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     if (url.searchParams.get("error") || !code) {
         throw error(400, "Error authenticating with Google.");
     }
+
+    const client = createClient();
 
     const {tokens} = await client.getToken(code);
     client.setCredentials(tokens);

@@ -1,23 +1,30 @@
 import {loadSheet} from '$lib/server/sheets/common';
 import type {GoogleSpreadsheetRow} from 'google-spreadsheet';
 import {type User, Role} from '@prisma/client';
+import {GoogleSpreadsheet, GoogleSpreadsheetWorksheet} from 'google-spreadsheet';
 
 const SHEET_ID = '1aMa2PkALXNkrJ7FLtAkTUYmuuotgJZ_fV9A5UWzw4HQ';
-const doc = await loadSheet(SHEET_ID);
-const sheet = doc.sheetsByIndex[0];
-
-await sheet.loadHeaderRow(2);
 
 export class MasterSheet {
+    private static doc: GoogleSpreadsheet;
+    private static sheet: GoogleSpreadsheetWorksheet;
+
+    static {
+        loadSheet(SHEET_ID).then(doc => {
+            this.doc = doc;
+            this.sheet = doc.sheetsByIndex[0];
+            this.sheet.loadHeaderRow(2);
+        })
+    }
 
     static async getUsers(): Promise<GoogleSpreadsheetRow[]> {
-        return await sheet.getRows();
+        return await this.sheet.getRows();
     }
 
     static async getUserData(email: string) {
-        const rows = await sheet.getRows();
-        const user = rows.find(row => row['SJA Email Address'].toLowerCase() === email.toLowerCase());
-        if (!user) return null;
+        const rows = await this.sheet.getRows();
+        const user = rows.find(row => row['SJA Email Address']?.toLowerCase() === email.toLowerCase());
+        if (!user) return {};
         return {
             contId: <string>user['Member ID'],
             firstName: <string>user['Given Names'],

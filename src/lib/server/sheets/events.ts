@@ -1,9 +1,9 @@
 import {loadSheet} from '$lib/server/sheets/common';
 import dayjs from 'dayjs';
 import type {User} from '@prisma/client';
+import {GoogleSpreadsheet} from 'google-spreadsheet';
 
 const SHEET_ID = '1pKNVVJU4HdyX5Sa070nqZxK_KIsQIQGGHZgQOkRkZ3Q';
-const doc = await loadSheet(SHEET_ID);
 
 type EventMember = Pick<User, 'firstName' | 'lastName'> & {role: string, meetAt?: 'unit' | 'event'};
 export interface CommunityEvent {
@@ -20,10 +20,18 @@ export interface CommunityEvent {
 }
 
 export class EventSheet {
+    private static doc: GoogleSpreadsheet;
+    static {
+        loadSheet(SHEET_ID).then(doc => {
+            this.doc = doc;
+        });
+    }
+
     static async forMonth(month: string, year = dayjs().year()) {
-        const sheet = doc.sheetsByTitle[month];
+        const sheet = this.doc.sheetsByTitle[month];
         await sheet.loadHeaderRow(1);
-        // @ts-ignore, TODO: update @types/google-spreadsheet once PR is merged and published
+        // TODO: update @types/google-spreadsheet once PR is merged and published
+        // @ts-ignore
         const rows = await sheet.getRows({offset: 2});
         return rows
             .filter(row => row['Event #'] && (<string>row['Event #'])?.includes(year.toString()) + '-')
@@ -68,7 +76,7 @@ export class EventSheet {
             const role = specialIdx === -1 ? (ctx ?? 'MFR') : pieces[specialIdx];
             const meetAt = lastName.includes('*') && !lastName.includes('**') ? 'event' : 'unit';
             lastName = lastName.replaceAll('*', '');
-            members.push({
+            members.push(<EventMember>{
                 firstName,
                 lastName,
                 meetAt,
