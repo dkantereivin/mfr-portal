@@ -1,7 +1,7 @@
-import * as fs from 'fs';
 import {GoogleSpreadsheet} from 'google-spreadsheet';
+import {env} from '$env/dynamic/private';
 
-const credentials = JSON.parse(fs.readFileSync('credentials.json', 'utf8'));
+const credentials = JSON.parse(atob(env.GOOGLE_SERVICE_ACCOUNT));
 export async function loadSheet(id: string) {
     const doc = new GoogleSpreadsheet(id);
     await doc.useServiceAccountAuth(credentials);
