@@ -20,15 +20,9 @@ export interface CommunityEvent {
 }
 
 export class EventSheet {
-    private static doc: GoogleSpreadsheet;
-    static {
-        loadSheet(SHEET_ID).then(doc => {
-            this.doc = doc;
-        });
-    }
-
     static async forMonth(month: string, year = dayjs().year()) {
-        const sheet = this.doc.sheetsByTitle[month];
+        const doc = await loadSheet(SHEET_ID);
+        const sheet = doc.sheetsByTitle[month];
         await sheet.loadHeaderRow(1);
         // TODO: update @types/google-spreadsheet once PR is merged and published
         // @ts-ignore

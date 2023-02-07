@@ -85,7 +85,15 @@
                         </span>
                         </svelte:fragment>
                     </SidebarItem>
+                    {#if hasRank($page.data.user, Role.CORPORAL)}
+                        <SidebarItem label="Members">
+                            <svelte:fragment slot="icon">
+                                <img src="/icons/users.svg" alt="Members" class="w-6 h-6" />
+                            </svelte:fragment>
+                        </SidebarItem>
+                    {/if}
                 </SidebarGroup>
+
                 <SidebarGroup border ulClass="space-y-2">
                     <SidebarItem label="Sign Out" href="/logout">
                         <svelte:fragment slot="icon">

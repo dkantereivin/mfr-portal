@@ -6,23 +6,20 @@ import {GoogleSpreadsheet, GoogleSpreadsheetWorksheet} from 'google-spreadsheet'
 const SHEET_ID = '1aMa2PkALXNkrJ7FLtAkTUYmuuotgJZ_fV9A5UWzw4HQ';
 
 export class MasterSheet {
-    private static doc: GoogleSpreadsheet;
-    private static sheet: GoogleSpreadsheetWorksheet;
-
-    static {
-        loadSheet(SHEET_ID).then(doc => {
-            this.doc = doc;
-            this.sheet = doc.sheetsByIndex[0];
-            this.sheet.loadHeaderRow(2);
-        })
-    }
-
     static async getUsers(): Promise<GoogleSpreadsheetRow[]> {
-        return await this.sheet.getRows();
+        const doc = await loadSheet(SHEET_ID);
+        const sheet = doc.sheetsByIndex[0];
+        await sheet.loadHeaderRow(2);
+
+        return await sheet.getRows();
     }
 
     static async getUserData(email: string) {
-        const rows = await this.sheet.getRows();
+        const doc = await loadSheet(SHEET_ID);
+        const sheet = doc.sheetsByIndex[0];
+        await sheet.loadHeaderRow(2);
+
+        const rows = await sheet.getRows();
         const user = rows.find(row => row['SJA Email Address']?.toLowerCase() === email.toLowerCase());
         if (!user) return {};
         return {
