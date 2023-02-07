@@ -1,65 +1,104 @@
-<nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700 mb-5">
-    <div class="container flex flex-wrap items-center justify-between mx-auto shadow-md px-2 sm:border-t sm:mt-2">
-      <a href="/" class="flex items-center">
-          <img src="/logo-full.svg" class="h-9 mr-3 sm:h-12" alt="Logo" />
-          <span class="self-center my-auto text-2xl font-semibold font-segoe whitespace-nowrap dark:text-white">
-            D0007 Portal
-          </span>
-      </a>
+<script lang="ts">
+    import {
+        CloseButton,
+        Sidebar,
+        SidebarDropdownItem,
+        SidebarDropdownWrapper,
+        SidebarGroup,
+        SidebarItem,
+        SidebarWrapper
+    } from "flowbite-svelte";
+    import {sineIn} from "svelte/easing";
+    import {hasRank} from '$lib/utils/auth';
+    import {LeadershipDepartment, Role} from '@prisma/client';
+    import {page} from '$app/stores';
 
-      <button data-collapse-toggle="navbar-multi-level" type="button" class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-multi-level" aria-expanded="false">
-        <span class="sr-only">Expand navigation options.</span>
-        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-        </svg>
-      </button>
+    let hidden = false;
 
-      <div class="hidden w-full md:block md:w-auto" id="navbar-horizontal">
-        <ul class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-          <li><a href="/" class="nav-link">Home</a></li>
-          <li>
-              <button id="attendance-dropdown" data-dropdown-toggle="dropdownNavbar" class="flex items-center justify-between w-full py-2 pl-3 pr-4 font-medium text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">Dropdown <svg class="w-4 h-4 ml-1" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
-              <!-- Dropdown menu -->
-              <div id="dropdownNavbar" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                  <ul class="py-1 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
-                    <li>
-                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                    </li>
-                    <li>
-                      <button id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown" data-dropdown-placement="right-start" type="button" class="flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                        Attend
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                      </button>
-                      <div id="doubleDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700">
-                          <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="doubleDropdownButton">
-                            <li>
-                              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Overview</a>
-                            </li>
-                            <li>
-                              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">My downloads</a>
-                            </li>
-                            <li>
-                              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Billing</a>
-                            </li>
-                            <li>
-                              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Rewards</a>
-                            </li>
-                          </ul>
-                      </div>
-                    </li>
-                    <li>
-                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-                    </li>
-                  </ul>
-                  <div class="py-1">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Sign out</a>
-                  </div>
-              </div>
-          </li>
-          
-        </ul>
-      </div>
-    </div>
-  </nav>
+    // TODO: animation
+    const transitionParams = {
+        transitionType: "fly",
+        x: -320,
+        duration: 200,
+        easing: sineIn
+    };
+
+
+</script>
+
+<nav>
+    {#if hidden}
+        <button on:click={() => hidden = !hidden} type="button" class="fixed inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+            </svg>
+        </button>
+    {/if}
+    <img src="/favicon/favicon-32x32.png" class="fixed right-5 mt-2 md:hidden" alt="St John Ambulance Logo" />
+    <Sidebar asideClass="w-72 fixed sm:relative" bind:hidden={hidden}>
+        <SidebarWrapper divClass="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800 h-screen flex flex-col">
+            <header class="flex items-center mb-2">
+                <h5 class="text-base font-semibold text-gray-500 uppercase">Menu</h5>
+                <CloseButton on:click={() => {hidden = !hidden}} class="mb-4 dark:text-white sm:hidden" />
+            </header>
+            <section class="flex-1 flex flex-col justify-between">
+                <SidebarGroup>
+                    <SidebarItem label="Dashboard">
+                        <svelte:fragment slot="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" /></svg>
+                        </svelte:fragment>
+                    </SidebarItem>
+                    {#if hasRank($page.data.user, Role.CORPORAL, [LeadershipDepartment.ADMINISTRATION, LeadershipDepartment.TRAINING])}
+                        <SidebarDropdownWrapper label="Attendance">
+                            <svelte:fragment slot="icon">
+                                <img src="/icons/checklist.svg" alt="Attendance" class="w-6 h-6" />
+                            </svelte:fragment>
+                            <SidebarDropdownItem label="Check In" />
+                            <SidebarDropdownItem label="Code" />
+                            <SidebarDropdownItem label="Manage" />
+                        </SidebarDropdownWrapper>
+                    {:else}
+                        <SidebarItem label="Attendance">
+                            <svelte:fragment slot="icon">
+                                <img src="/icons/checklist.svg" alt="Attendance" class="w-6 h-6" />
+                            </svelte:fragment>
+                        </SidebarItem>
+                    {/if}
+                    <SidebarItem label="Event Forms" spanClass="flex-1 ml-3 whitespace-nowrap">
+                        <svelte:fragment slot="icon">
+                            <img src="/icons/event-form.svg" alt="Event Forms" class="w-6 h-6" />
+                        </svelte:fragment>
+                        <svelte:fragment slot="subtext">
+                        <span class="inline-flex justify-center items-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full">
+                            Soon
+                        </span>
+                        </svelte:fragment>
+                    </SidebarItem>
+                    <SidebarItem label="Inbox" spanClass="flex-1 ml-3 whitespace-nowrap">
+                        <svelte:fragment slot="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859M12 3v8.25m0 0l-3-3m3 3l3-3" /></svg>
+                        </svelte:fragment>
+                        <svelte:fragment slot="subtext">
+                        <span class="inline-flex justify-center items-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full">
+                            Soon
+                        </span>
+                        </svelte:fragment>
+                    </SidebarItem>
+                </SidebarGroup>
+                <SidebarGroup border ulClass="space-y-2">
+                    <SidebarItem label="Sign Out">
+                        <svelte:fragment slot="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
+                        </svelte:fragment>
+                    </SidebarItem>
+                    <SidebarItem label="Help">
+                        <svelte:fragment slot="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.712 4.33a9.027 9.027 0 011.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 00-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 010 9.424m-4.138-5.976a3.736 3.736 0 00-.88-1.388 3.737 3.737 0 00-1.388-.88m2.268 2.268a3.765 3.765 0 010 2.528m-2.268-4.796a3.765 3.765 0 00-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 01-1.388.88m2.268-2.268l4.138 3.448m0 0a9.027 9.027 0 01-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0l-3.448-4.138m3.448 4.138a9.014 9.014 0 01-9.424 0m5.976-4.138a3.765 3.765 0 01-2.528 0m0 0a3.736 3.736 0 01-1.388-.88 3.737 3.737 0 01-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 01-1.652-1.306 9.027 9.027 0 01-1.306-1.652m0 0l4.138-3.448M4.33 16.712a9.014 9.014 0 010-9.424m4.138 5.976a3.765 3.765 0 010-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 011.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 00-1.652 1.306A9.025 9.025 0 004.33 7.288" /></svg>
+                        </svelte:fragment>
+                    </SidebarItem>
+                </SidebarGroup>
+            </section>
+        </SidebarWrapper>
+    </Sidebar>
+</nav>

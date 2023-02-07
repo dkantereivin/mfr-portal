@@ -1,7 +1,7 @@
 import type {PageServerLoad} from './$types';
 import {db} from '$lib/server/db';
 import { Role } from '@prisma/client';
-import { requireRank } from '$lib/server/auth';
+import { requireRank } from '$lib/utils/auth';
 import { randomString } from '$lib/utils/misc';
 import dayjs from 'dayjs';
 
@@ -20,7 +20,7 @@ export const load = (async ({locals}) => {
     if (existingCode) {
         return {code: existingCode.code};
     }
-    
+
     const code = randomString(6).toUpperCase();
     await db.attendanceCode.create({
         data: {
@@ -31,5 +31,5 @@ export const load = (async ({locals}) => {
     });
 
     return {code};
-    
+
 }) satisfies PageServerLoad;

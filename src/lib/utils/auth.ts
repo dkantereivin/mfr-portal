@@ -28,3 +28,11 @@ export const requireRank = (user: User, role: Role, dept?: LeadershipDepartment 
         throw error(403, "This page can only be accessed by " + dept.join(', ') + " " + role + "s and above.")
     }
 }
+
+export const hasRank = (user: User, role: Role, dept?: LeadershipDepartment | LeadershipDepartment[]): boolean => {
+    try {
+        return requireRank(user, role, dept);
+    } catch (e) {
+        return false;
+    }
+}
