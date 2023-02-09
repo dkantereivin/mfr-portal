@@ -1,4 +1,4 @@
-import type { PageServerLoad } from "../$types";
+import type { PageServerLoad } from "./$types";
 import dayjs, { Dayjs } from "dayjs";
 import {error} from "@sveltejs/kit"
 import {db} from "$lib/server/db";
