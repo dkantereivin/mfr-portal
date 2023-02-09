@@ -53,8 +53,8 @@
 		"@sveltejs/adapter-vercel": "^2.0.2",
 		"awesome-qr": "2.1.5-rc.0",
 		"dayjs": "^1.11.7",
+		"google-auth-library": "^8.7.0",
 		"google-spreadsheet": "^3.3.0",
-		"googleapis": "^110.0.0",
 		"lodash": "^4.17.21"
 	},
 	"prisma": {

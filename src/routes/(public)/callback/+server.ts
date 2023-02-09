@@ -1,4 +1,3 @@
-import { google } from "googleapis";
 import { error, redirect } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { createClient } from "$lib/server/googleAuth";
@@ -19,12 +18,9 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     const {tokens} = await client.getToken(code);
     client.setCredentials(tokens);
 
-    const oauth2 = google.oauth2({
-        auth: client,
-        version: "v2"
-    });
-
-    const {data} = await oauth2.userinfo.v2.me.get();
+    const res = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.access_token}`);
+    const data = await res.json();
+    
     const {refresh_token} = tokens;
 
     if (!data.email) {
