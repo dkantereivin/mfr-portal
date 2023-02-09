@@ -1,7 +1,6 @@
 import {loadSheet} from '$lib/server/sheets/common';
 import type {GoogleSpreadsheetRow} from 'google-spreadsheet';
 import {type User, Role} from '@prisma/client';
-import {GoogleSpreadsheet, GoogleSpreadsheetWorksheet} from 'google-spreadsheet';
 
 const SHEET_ID = '1aMa2PkALXNkrJ7FLtAkTUYmuuotgJZ_fV9A5UWzw4HQ';
 
