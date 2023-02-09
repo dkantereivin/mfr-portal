@@ -19,7 +19,7 @@
 		"@popperjs/core": "^2.11.6",
 		"@sveltejs/adapter-cloudflare": "^2.0.1",
 		"@sveltejs/adapter-node": "^1.1.7",
-		"@sveltejs/kit": "^1.0.0",
+		"@sveltejs/kit": "^1.5.2",
 		"@types/google-spreadsheet": "^3.3.0",
 		"@types/lodash": "^4.14.191",
 		"@types/node": "^18.11.18",
