@@ -9,7 +9,7 @@ specifiers:
   '@sveltejs/adapter-node': ^1.1.7
   '@sveltejs/adapter-vercel': ^2.0.2
   '@sveltejs/kit': ^1.5.2
-  '@types/google-spreadsheet': ^3.3.0
+  '@types/google-spreadsheet': ^3.3.1
   '@types/lodash': ^4.14.191
   '@types/node': ^18.11.18
   '@types/qrcode': ^1.5.0
@@ -62,7 +62,7 @@ devDependencies:
   '@sveltejs/adapter-cloudflare': 2.0.1_@sveltejs+kit@1.5.2
   '@sveltejs/adapter-node': 1.1.7_@sveltejs+kit@1.5.2
   '@sveltejs/kit': 1.5.2_svelte@3.55.1+vite@4.0.4
-  '@types/google-spreadsheet': 3.3.0
+  '@types/google-spreadsheet': 3.3.1
   '@types/lodash': 4.14.191
   '@types/node': 18.11.18
   '@types/qrcode': 1.5.0
@@ -604,8 +604,8 @@ packages:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
     dev: true
 
-  /@types/google-spreadsheet/3.3.0:
-    resolution: {integrity: sha512-5VXD/RvRkeH1dgYvMh1vJfjTUpJwMnfOAAkMcK7IwZmv/jY3qnXrW7Iye74mZ3nXIP8OjGzh4qLc1+TaKdvLfA==}
+  /@types/google-spreadsheet/3.3.1:
+    resolution: {integrity: sha512-nvwAEr+uKK/IQ0hfH3agtRX2RnKI5+D/pUnDpJ/+D8nSbrvvV+fgyA8lGjoAHIHcls19NTzkQBm1T7vbF5iy8A==}
     dev: true
 
   /@types/json-schema/7.0.11:

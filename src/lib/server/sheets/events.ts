@@ -1,7 +1,6 @@
 import {loadSheet} from '$lib/server/sheets/common';
 import dayjs from 'dayjs';
 import type {User} from '@prisma/client';
-import {GoogleSpreadsheet} from 'google-spreadsheet';
 
 const SHEET_ID = '1pKNVVJU4HdyX5Sa070nqZxK_KIsQIQGGHZgQOkRkZ3Q';
 
@@ -24,8 +23,6 @@ export class EventSheet {
         const doc = await loadSheet(SHEET_ID);
         const sheet = doc.sheetsByTitle[month];
         await sheet.loadHeaderRow(1);
-        // TODO: update @types/google-spreadsheet once PR is merged and published
-        // @ts-ignore
         const rows = await sheet.getRows({offset: 2});
         return rows
             .filter(row => row['Event #'] && (<string>row['Event #'])?.includes(year.toString()) + '-')
