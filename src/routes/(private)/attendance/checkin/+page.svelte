@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
     import {Label, Input, Button, Helper} from 'flowbite-svelte';
 	import type { PageData } from './$types';
-    export let data: PageData;
+    export let data: PageData & {error?: string, code?: string}; // todo: use proper type
 </script>
 
 <main class="container sm:border mx-auto p-4">
@@ -17,7 +17,7 @@
     <form method="GET" class="border p-2 mt-5 sm:border-0 sm:w-1/2" use:enhance>
         <Label class="space-y-2 mb-2">
             <span class="text-lg">Attendance Code</span>
-            <Input color="{data?.error ? 'red' : ''}" name="code" type="text" placeholder="Enter Code" vallue="{data?.code ?? ''}"/>
+            <Input color="{data?.error ? 'red' : 'base'}" name="code" type="text" placeholder="Enter Code" value="{data?.code ?? ''}"/>
             {#if data?.error}
                 <Helper class="mt-2" color="red"><span class="font-bold">{data?.error}</span> Please try again.</Helper>
             {/if}

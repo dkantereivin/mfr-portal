@@ -3,7 +3,7 @@
 </script>
 
 <!-- LOGIN PAGE -->
-<main class="w-full max-w-xs m-auto rounded p-10 sm:border">
+<main class="w-full max-w-xs m-auto rounded p-10 sm:border my-10">
     <header>
         <img src="logo-full.svg" alt="Cross of St John" class="w-40 mx-auto mb-5">
         <h1 class="text-xl text-center">Sign in</h1>
