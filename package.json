@@ -49,6 +49,7 @@
 	"type": "module",
 	"dependencies": {
 		"@prisma/client": "^4.10.0",
+		"@sveltejs/adapter-vercel": "^2.0.2",
 		"awesome-qr": "2.1.5-rc.0",
 		"dayjs": "^1.11.7",
 		"dotenv": "^16.0.3",
