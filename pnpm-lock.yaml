@@ -19,7 +19,6 @@ specifiers:
   awesome-qr: 2.1.5-rc.0
   classnames: ^2.3.2
   dayjs: ^1.11.7
-  dotenv: ^16.0.3
   eslint: ^8.28.0
   eslint-config-prettier: ^8.5.0
   eslint-plugin-svelte3: ^4.0.0
@@ -34,7 +33,6 @@ specifiers:
   prisma: ^4.10.0
   svelte: ^3.54.0
   svelte-check: ^2.9.2
-  svelte-loading-spinners: ^0.3.4
   tailwindcss: ^3.2.4
   ts-node: ^10.9.1
   tslib: ^2.4.1
@@ -48,12 +46,9 @@ dependencies:
   '@sveltejs/adapter-vercel': 2.0.2_@sveltejs+kit@1.5.2
   awesome-qr: 2.1.5-rc.0
   dayjs: 1.11.7
-  dotenv: 16.0.3
   google-spreadsheet: 3.3.0
   googleapis: 110.0.0
   lodash: 4.17.21
-  svelte-loading-spinners: 0.3.4
-  yaml: 2.2.1
 
 devDependencies:
   '@faker-js/faker': 7.6.0
@@ -87,6 +82,7 @@ devDependencies:
   typescript: 4.9.4
   vite: 4.0.4_@types+node@18.11.18
   vitest: 0.25.8
+  yaml: 2.2.1
 
 packages:
 
@@ -1259,11 +1255,6 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
-
-  /dotenv/16.0.3:
-    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
-    engines: {node: '>=12'}
-    dev: false
 
   /ecdsa-sig-formatter/1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
@@ -2759,10 +2750,6 @@ packages:
     dependencies:
       svelte: 3.55.1
 
-  /svelte-loading-spinners/0.3.4:
-    resolution: {integrity: sha512-vKaW71QMCBcTNijAGc0mUl8k3DQ66iYmp6MB8BMGCXyWk82bTrcLy8FOnSm9fE+8q6TwzD6PLUoYFHt0II93Xw==}
-    dev: false
-
   /svelte-preprocess/4.10.7_oifjsu5oar4lzyaoppb2hxramu:
     resolution: {integrity: sha512-sNPBnqYD6FnmdBrUmBCaqS00RyCsCpj2BG58A1JBswNF7b0OKviwxqVrOL/CKyJrLSClrSeqQv5BXNg2RUbPOw==}
     engines: {node: '>= 9.11.2'}
@@ -3159,7 +3146,7 @@ packages:
   /yaml/2.2.1:
     resolution: {integrity: sha512-e0WHiYql7+9wr4cWMx3TVQrNwejKaEe7/rHNmQmqRjazfOP5W8PB6Jpebb5o6fIapbz9o9+2ipcaTM2ZwDI6lw==}
     engines: {node: '>= 14'}
-    dev: false
+    dev: true
 
   /yn/3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
