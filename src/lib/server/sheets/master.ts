@@ -26,6 +26,7 @@ export class MasterSheet {
             firstName: <string>user['Given Names'],
             lastName: <string>user['Surname'],
             role: this.parseRank(user['Rank']),
+            dept: user['Leadership Department'],
         } satisfies Partial<User>;
     }
 
