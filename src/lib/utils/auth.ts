@@ -15,6 +15,7 @@ export const ROLE_RANKING: Role[] = [
 export const getRank = (role: Role): number => ROLE_RANKING.indexOf(role);
 
 export const requireRank = (user: User, role: Role, dept?: LeadershipDepartment | LeadershipDepartment[]): boolean => {
+    if (user.role === Role.SUPER_ADMIN) return true;
     if (getRank(user.role) < getRank(role))
         throw error(403, 'This page can only be accessed by ' + role + 's and above.');
 
