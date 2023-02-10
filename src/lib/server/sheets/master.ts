@@ -1,6 +1,6 @@
 import {loadSheet} from '$lib/server/sheets/common';
 import type {GoogleSpreadsheetRow} from 'google-spreadsheet';
-import {type User, Role} from '@prisma/client';
+import {type User, Role, LeadershipDepartment} from '@prisma/client';
 
 const SHEET_ID = '1aMa2PkALXNkrJ7FLtAkTUYmuuotgJZ_fV9A5UWzw4HQ';
 
@@ -26,7 +26,7 @@ export class MasterSheet {
             firstName: <string>user['Given Names'],
             lastName: <string>user['Surname'],
             role: this.parseRank(user['Rank']),
-            dept: user['Leadership Department'],
+            dept: <LeadershipDepartment | undefined>user['Leadership Department'],
         } satisfies Partial<User>;
     }
 

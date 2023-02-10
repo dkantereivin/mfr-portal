@@ -34,10 +34,10 @@ enum TagActions {
 model User {
   id        String  @id @default(cuid())
   googleId  String  @unique
-  contId    String? @unique
+  contId    String  @unique
   email     String  @unique
-  firstName String?
-  lastName  String?
+  firstName String
+  lastName  String
 
   role Role                 @default(NONE)
   dept LeadershipDepartment @default(NONE)

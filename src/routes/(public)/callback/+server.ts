@@ -38,11 +38,17 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
             throw error(400, "No refresh token provided by Google.");
         }
         const sjaInfo = await MasterSheet.getUserData(data.email);
+        if (!sjaInfo.contId) {
+            throw error(400, "No SJA Alliance ID found. Please contact the web administrator.");
+        }
+
         user = await db.user.create({
             data: {
-                firstName: data.given_name,
-                lastName: data.family_name,
-                ...sjaInfo,
+                firstName: sjaInfo.firstName ?? data.given_name,
+                lastName: sjaInfo.lastName ?? data.family_name,
+                role: sjaInfo.role ?? "NONE",
+                dept: sjaInfo.dept ?? "NONE",
+                contId: sjaInfo.contId,
                 googleId: data.id!,
                 email: data.email,
                 refreshToken: refresh_token
