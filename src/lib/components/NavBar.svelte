@@ -44,7 +44,7 @@
             </header>
             <section class="flex-1 flex flex-col justify-between">
                 <SidebarGroup>
-                    <SidebarItem label="Dashboard">
+                    <SidebarItem label="Dashboard" href="/dashboard">
                         <svelte:fragment slot="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" /></svg>
                         </svelte:fragment>
@@ -54,12 +54,12 @@
                             <svelte:fragment slot="icon">
                                 <img src="/icons/checklist.svg" alt="Attendance" class="w-6 h-6" />
                             </svelte:fragment>
-                            <SidebarDropdownItem label="Check In" />
-                            <SidebarDropdownItem label="Code" />
-                            <SidebarDropdownItem label="Manage" />
+                            <SidebarDropdownItem label="Check In" href="/attendance/checkin" />
+                            <SidebarDropdownItem label="Code" href="/attendance/qr" />
+                            <SidebarDropdownItem label="Manage" href="/attendance/manage" />
                         </SidebarDropdownWrapper>
                     {:else}
-                        <SidebarItem label="Attendance">
+                        <SidebarItem label="Attendance" href="/attendance/checkin">
                             <svelte:fragment slot="icon">
                                 <img src="/icons/checklist.svg" alt="Attendance" class="w-6 h-6" />
                             </svelte:fragment>
