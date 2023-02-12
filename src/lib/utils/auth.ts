@@ -12,6 +12,14 @@ export const ROLE_RANKING: Role[] = [
     Role.SUPER_ADMIN
 ];
 
+export const LEADERSHIP_DEPARTMENTS: LeadershipDepartment[] = [
+    LeadershipDepartment.NONE,
+    LeadershipDepartment.TRAINING,
+    LeadershipDepartment.OPERATIONS,
+    LeadershipDepartment.ADMINISTRATION,
+    LeadershipDepartment.ALL
+];
+
 export const ROLE_GROUPS: [string, Role[]][] = [
     ['Officers', [Role.SUPER_ADMIN, Role.UNIT_CHIEF, Role.DEPUTY_CHIEF]],
     ['Non-Commissioned Officers', [Role.SERGEANT, Role.CORPORAL]],
