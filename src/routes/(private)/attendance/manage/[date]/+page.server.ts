@@ -2,8 +2,15 @@ import type { PageServerLoad } from "./$types";
 import dayjs, { Dayjs } from "dayjs";
 import {error} from "@sveltejs/kit"
 import {db} from "$lib/server/db";
+import { requireRank } from "$lib/utils/auth";
+import {Role, LeadershipDepartment} from "@prisma/client";
 
-export const load = (async ({params}) => {
+export const load = (async ({params, locals}) => {
+    requireRank(
+        locals.user!, Role.CORPORAL,
+        [LeadershipDepartment.ADMINISTRATION, LeadershipDepartment.TRAINING]
+    );
+
     const raw = params.date;
     let date: Dayjs;
     if (!raw || raw === "today" || raw === "") {
@@ -15,8 +22,6 @@ export const load = (async ({params}) => {
     if (!date.isValid()) {
         return error(404, "Invalid date");
     }
-
-    console.log(date);
 
     const attendance = await db.attendance.findMany({
         where: {

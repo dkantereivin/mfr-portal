@@ -12,7 +12,15 @@ export const ROLE_RANKING: Role[] = [
     Role.SUPER_ADMIN
 ];
 
+export const ROLE_GROUPS: [string, Role[]][] = [
+    ['Officers', [Role.SUPER_ADMIN, Role.UNIT_CHIEF, Role.DEPUTY_CHIEF]],
+    ['Non-Commissioned Officers', [Role.SERGEANT, Role.CORPORAL]],
+    ['Members', [Role.MEMBER]],
+    ['Apprentices', [Role.APPRENTICE]]
+];
+
 export const getRank = (role: Role): number => ROLE_RANKING.indexOf(role);
+export const getRole = (rank: number): Role => ROLE_RANKING[rank];
 
 export const requireRank = (user: User, role: Role, dept?: LeadershipDepartment | LeadershipDepartment[]): boolean => {
     if (user.role === Role.SUPER_ADMIN) return true;
