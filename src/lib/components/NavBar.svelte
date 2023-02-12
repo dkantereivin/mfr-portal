@@ -36,7 +36,7 @@
         </button>
     {/if}
     <img src="/favicon/favicon-32x32.png" class="fixed right-5 mt-2 md:hidden" alt="St John Ambulance Logo" />
-    <Sidebar asideClass="w-72 fixed sm:relative" bind:hidden={hidden}>
+    <Sidebar asideClass="w-72 fixed z-50" bind:hidden={hidden}>
         <SidebarWrapper divClass="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800 h-screen flex flex-col">
             <header class="flex items-center mb-2">
                 <h5 class="text-base font-semibold text-gray-500 uppercase">Menu</h5>
