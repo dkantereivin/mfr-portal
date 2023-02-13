@@ -86,7 +86,7 @@
                         </svelte:fragment>
                     </SidebarItem>
                     {#if hasRank($page.data.user, Role.CORPORAL)}
-                        <SidebarItem label="Members">
+                        <SidebarItem label="Manage Members" href="/admin/users">
                             <svelte:fragment slot="icon">
                                 <img src="/icons/users.svg" alt="Members" class="w-6 h-6" />
                             </svelte:fragment>
