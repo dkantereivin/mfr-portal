@@ -3,7 +3,7 @@ import type { PageServerLoad } from "./$types";
 import {redirect} from '@sveltejs/kit';
 
 export const load = (async ({locals, url}) => {
-    const code = url.searchParams.get('code')?.trim();
+    const code = url.searchParams.get('code')?.trim().toUpperCase();
     if (!code) return {};
 
     const fail = (error: string) => ({code, success: false, error});

@@ -65,7 +65,7 @@ export const load = (async ({url, locals}) => {
         trainingDates.map((date) => {
             const key = date.format('YYYY-MM-DD')
             const attendances = attendanceByDate[key] ?? [];
-            attendanceDatesForMember[key] = attendances.some(att => {console.log(att.time); return dayjs(att.time).hour() >= 17});
+            attendanceDatesForMember[key] = attendances.some(att => dayjs(att.time).hour() >= 17);
         });
         memberAttendance.push({
             user,

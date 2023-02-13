@@ -64,7 +64,7 @@ export const seedAttendanceCodes = async (randomCnt: number, users: User[]) => {
     const code: () => Prisma.AttendanceCodeCreateInput = () => {
         const user = _.sample(users.filter(u => u.role === Role.CORPORAL));
         return {
-            code: randomString(6),
+            code: randomString(6).toUpperCase(),
             expiresAt: faker.date.future(),
             officerId: user!.id
         }
