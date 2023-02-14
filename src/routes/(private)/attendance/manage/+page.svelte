@@ -2,13 +2,13 @@
 	import { getRank, ROLE_GROUPS } from "$lib/utils/auth";
 	import type { Role } from "@prisma/client";
     import dayjs from "dayjs";
-    import { Popover } from "flowbite-svelte";
+    import { Popover, Tooltip } from "flowbite-svelte";
     import _ from "lodash";
     import type { PageData } from "./$types";
     import {slide} from "svelte/transition"
 
     export let data: PageData;
-    const {trainingDates, memberAttendance} = data;
+    const {trainingDates, memberAttendance, finalizedDates} = data;
 
     const membersForRoles = (roles: Role[]) => _.sortBy(
         memberAttendance.filter(({user}) => roles.includes(user.role)),
@@ -25,8 +25,37 @@
                     <th class="px-6 py-3">Last Name</th>
                     <th class="px-6 py-3">First name</th>
                     <th class="px-6 py-3">Alliance #</th>
-                    {#each trainingDates as date}
-                        <th class="px-6 py-2">{dayjs(date).format('MMM D')}</th>
+                    {#each finalizedDates as [date, isFinalized]}
+                        <th class="px-6 py-2">
+                            <div class="flex flex-col justify-center align-middle text-center">
+                                <span>{dayjs(date).format('MMM D')}</span>
+                                {#if isFinalized}
+                                    <span class="flex w-3 h-3 rounded-full bg-green-500 mx-auto mt-2"/>
+                                    <Tooltip placement="bottom">
+                                        This training date has been finalized.
+                                        Any further changes should be entered manually into the volunteer hours sheet.
+                                    </Tooltip>
+                                {:else}
+                                    <span class="flex w-3 h-3 rounded-full bg-yellow-300 mx-auto mt-2"/>
+                                    <Popover title="Date Currently Editable" placement="bottom" >
+                                            <span class="text-sm normal-case">
+                                                This date is has not yet been exported and therefore is still editable.
+                                                <br><br>
+                                                Any changes made here will be automatically reflected in the volunteer hours sheet.
+                                            </span>
+                                            <br>
+                                            <form method="POST" action="?/export">
+                                                <input type="hidden" name="date" value="{date}" />
+                                                <div class="flex flex-row justify-center items-center space-x-4 mt-2">
+                                                    <label for="hours" class="text-md">Hours:</label>
+                                                    <input type="number" name="hours" class="w-16 border border-gray-300 rounded-md px-2 py-2" placeholder="Hours" value={2} />
+                                                    <button class="px-4 py-3 bg-red-500 text-white rounded-md hover:bg-red-600">Export and Finalize</button>    
+                                                </div>
+                                            </form>
+                                    </Popover>
+                                {/if}
+                            </div>
+                        </th>
                     {/each}
                 </tr>
             </thead>

@@ -42,7 +42,7 @@ export const requireRank = (user: User, role: Role, dept?: LeadershipDepartment 
         throw error(403, "This page can only be accessed by " + dept + " " + role + "s and above.")
     } else {
         if (dept.includes(LeadershipDepartment.ALL) || dept.includes(user.dept)) return true;
-        throw error(403, "This page can only be accessed by " + dept.join(', ') + " " + role + "s and above.")
+        throw error(403, "This page can only be accessed by " + (typeof dept === 'string' ? dept : dept.join(', ')) + " " + role + "s and above.")
     }
 }
 

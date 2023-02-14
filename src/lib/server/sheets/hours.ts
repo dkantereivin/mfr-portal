@@ -9,7 +9,7 @@ const SHEET_ID = '1vbz3bY6ldRxfZ6y_h0W1rP1zTe1Y7oZs2rQIavnggSk';
 type PartialUser = Pick<User, 'firstName' | 'lastName' | 'contId'>;
 type PartialUserWithRole = PartialUser & {role: User['role']};
 
-type HoursEntry = {
+export type HoursEntry = {
     date: string | Dayjs;
     event?: string;
     hours: number;
@@ -133,8 +133,8 @@ export class HoursSheet {
         }
 
         // insert the new row
-        const formatted = entry.date.format(category === 'admin' ? 'MMM D' : 'MMM');
-        sheet.getCell(i, columnIndex).value = user.role === Role.APPRENTICE ? formatted + 'e' : formatted;
+        const formatted = entry.date.format(category === 'admin' ? 'MMM' : 'MMM D');
+        sheet.getCell(i, columnIndex).value = (user.role === Role.APPRENTICE && category === 'events') ? formatted + 'e' : formatted;
         if (hasThreeCols(category)) {
             sheet.getCell(i, columnIndex + 1).value = entry.event!;
             sheet.getCell(i, columnIndex + 2).value = entry.hours;

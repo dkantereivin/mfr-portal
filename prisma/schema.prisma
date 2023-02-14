@@ -79,6 +79,8 @@ model Attendance {
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+
+  isFinalized Boolean @default(false)
 }
 
 model NfcTag {
