@@ -2,8 +2,17 @@ import type {RequestHandler} from '@sveltejs/kit';
 import {error, redirect} from '@sveltejs/kit';
 import {db} from '$lib/server/db';
 import { TagActions } from '@prisma/client';
+import { LOGIN_REDIRECT_TO, standardCookie } from '$lib/utils/cookies';
 
-export const GET = (async ({url, params, locals}) => {
+export const GET = (async ({url, params, locals, cookies}) => {
+    if (!locals.authenticated) {
+        cookies.set(LOGIN_REDIRECT_TO, url.href, {
+            ...standardCookie(),
+            maxAge: 5 * 60
+        });
+        throw redirect(307, '/');
+    }
+
     const uidRaw = url.searchParams.get('uid');
     if (!uidRaw) {
         throw error(400, 'Missing UID');
