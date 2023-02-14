@@ -17,7 +17,7 @@
     );
 </script>
 
-<main class="container sm:border sm:mx-10 sm:rounded-lg">
+<main class="container sm:border sm:mx-auto mx-2 sm:rounded-lg">
     <div class="relative overflow-x-auto shadow-md">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs uppercase bg-gray-50 text-gray-700 dark:bg-gray-700 dark:text-gray-400">
