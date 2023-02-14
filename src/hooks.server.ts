@@ -1,14 +1,7 @@
 import { db } from '$lib/server/db';
 import { SESSION_COOKIE_ID } from '$lib/utils/cookies';
 import type {Handle} from '@sveltejs/kit';
-import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
-dayjs.tz.setDefault("America/Toronto");
 
 export const handle = (async ({ event, resolve }) => {
     const sessionId = event.cookies.get(SESSION_COOKIE_ID);
