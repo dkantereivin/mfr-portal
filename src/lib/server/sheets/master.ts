@@ -2,7 +2,7 @@ import {loadSheet} from '$lib/server/sheets/common';
 import type {GoogleSpreadsheetRow} from 'google-spreadsheet';
 import {type User, Role, LeadershipDepartment} from '@prisma/client';
 
-const SHEET_ID = '1aMa2PkALXNkrJ7FLtAkTUYmuuotgJZ_fV9A5UWzw4HQ';
+const SHEET_ID = '1Pj8jL_Pwae2wNqk57w5BICy4FcCk5UxdqqgmYP497Hk';
 
 export class MasterSheet {
     static async getUsers(): Promise<GoogleSpreadsheetRow[]> {
