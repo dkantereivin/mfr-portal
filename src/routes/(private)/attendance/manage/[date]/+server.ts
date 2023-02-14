@@ -5,6 +5,7 @@ import {Role, LeadershipDepartment} from "@prisma/client";
 import dayjs from "dayjs";
 import {json} from '@sveltejs/kit';
 
+// TODO: note that all dates are WRONG using old technique
 // TODO: move to form action
 export const PUT = (async ({request, locals}) => {
     requireRank(

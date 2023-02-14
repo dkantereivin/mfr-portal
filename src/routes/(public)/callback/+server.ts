@@ -5,6 +5,7 @@ import { db } from "$lib/server/db";
 import { SESSION_COOKIE_ID, hardenedCookie, LOGIN_REDIRECT_TO } from "$lib/utils/cookies";
 import dayjs from "dayjs";
 import {MasterSheet} from '$lib/server/sheets/master';
+import { utcTime } from "$lib/utils/dates";
 
 export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     const code = url.searchParams.get("code");
@@ -66,7 +67,7 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     }
 
     // create session
-    const TTL = dayjs().add(12 * 7, "hours").toDate();
+    const TTL = utcTime().add(12 * 7, "hours").toDate();
     const session = await db.session.create({
         data: {
             userId: user.id,

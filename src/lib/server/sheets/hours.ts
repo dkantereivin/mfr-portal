@@ -2,7 +2,8 @@ import type {GoogleSpreadsheet} from 'google-spreadsheet';
 import {loadSheet} from '$lib/server/sheets/common';
 import { Role, User } from '@prisma/client';
 import _ from 'lodash';
-import dayjs, { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import { dayjs, parseDate, parseLocal } from '$lib/utils/dates';
 
 const SHEET_ID = '1vbz3bY6ldRxfZ6y_h0W1rP1zTe1Y7oZs2rQIavnggSk';
 
@@ -97,8 +98,9 @@ export class HoursSheet {
         const {rowIndex, columnIndex} = sheet.getCellByA1(topLeft);
 
         if (!dayjs.isDayjs(entry.date)) {
-            entry.date = dayjs(entry.date);
+            entry.date = parseDate(entry.date);
         }
+        entry.date = entry.date.tz();
 
         let i;
         for (i = rowIndex; i < sheet.rowCount; i++) {
@@ -111,7 +113,7 @@ export class HoursSheet {
             }
 
             // if only a month is given, assume the first of the month
-            const date = dayjs(dateString).isValid() ? dayjs(dateString) : dayjs(dateString + ' 1');
+            const date = parseLocal(dateString).isValid() ? parseLocal(dateString) : parseLocal(dateString + ' 1');
             // if the date is still invalid, let's just keep looking.
             if (!date.isValid()) continue;
 

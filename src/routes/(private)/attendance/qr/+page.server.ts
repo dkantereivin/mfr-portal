@@ -4,6 +4,7 @@ import { Role } from '@prisma/client';
 import { requireRank } from '$lib/utils/auth';
 import { randomString } from '$lib/utils/misc';
 import dayjs from 'dayjs';
+import { localTime } from '$lib/utils/dates';
 
 export const load = (async ({locals}) => {
     requireRank(locals.user!, Role.CORPORAL);
@@ -25,7 +26,7 @@ export const load = (async ({locals}) => {
     await db.attendanceCode.create({
         data: {
             code,
-            expiresAt: dayjs().endOf('day').toDate(),
+            expiresAt: localTime().endOf('day').utc().toDate(),
             officerId: locals.user!.id
         }
     });

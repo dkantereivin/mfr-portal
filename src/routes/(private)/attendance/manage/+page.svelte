@@ -6,6 +6,7 @@
     import _ from "lodash";
     import type { PageData } from "./$types";
     import {slide} from "svelte/transition"
+	import { parseLocal } from "$lib/utils/dates";
 
     export let data: PageData;
     const {trainingDates, memberAttendance, finalizedDates} = data;
@@ -28,7 +29,7 @@
                     {#each finalizedDates as [date, isFinalized]}
                         <th class="px-6 py-2">
                             <div class="flex flex-col justify-center align-middle text-center">
-                                <span>{dayjs(date).format('MMM D')}</span>
+                                <span>{parseLocal(date).format('MMM D')}</span>
                                 {#if isFinalized}
                                     <span class="flex w-3 h-3 rounded-full bg-green-500 mx-auto mt-2"/>
                                     <Tooltip placement="bottom">

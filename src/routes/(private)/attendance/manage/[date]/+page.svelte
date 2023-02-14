@@ -25,14 +25,13 @@
     <header>
         <h1 class="text-2xl">Member Attendance</h1>
         <div id="date-picker" class="flex flex-row">
-            <a data-sveltekit-reload href="/attendance/manage/{dayjs(date).subtract(1, 'week').format('YYYY-MM-DD')}">&lt;</a>
+            <!-- <a data-sveltekit-reload href="/attendance/manage/{dayjs(date).subtract(1, 'week').format('YYYY-MM-DD')}">&lt;</a> -->
             <input type="date" name="date" bind:value={date}
                 on:change={() => goto(`/attendance/manage/${date}`)}
             />
-            <a data-sveltekit-reload href="/attendance/manage/{dayjs(date).add(1, 'week').format('YYYY-MM-DD')}">&gt;</a>
+            <!-- <a data-sveltekit-reload href="/attendance/manage/{dayjs(date).add(1, 'week').format('YYYY-MM-DD')}">&gt;</a> -->
         </div>
     </header>
-    <!-- <Alert>Ohmygosh!</Alert> -->
     <Table>
         <TableHead>
             <TableHeadCell>Name</TableHeadCell>

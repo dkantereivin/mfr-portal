@@ -4,6 +4,7 @@ import {error} from "@sveltejs/kit"
 import {db} from "$lib/server/db";
 import { requireRank } from "$lib/utils/auth";
 import {Role, LeadershipDepartment} from "@prisma/client";
+import { localTime, parseDate } from "$lib/utils/dates";
 
 export const load = (async ({params, locals}) => {
     requireRank(
@@ -14,9 +15,9 @@ export const load = (async ({params, locals}) => {
     const raw = params.date;
     let date: Dayjs;
     if (!raw || raw === "today" || raw === "") {
-        date = dayjs();
+        date = localTime();
     } else {
-        date = dayjs(raw, "YYYY-MM-DD");
+        date = parseDate(raw);
     }
 
     if (!date.isValid()) {
@@ -26,8 +27,8 @@ export const load = (async ({params, locals}) => {
     const attendance = await db.attendance.findMany({
         where: {
             time: {
-                gte: date.startOf("day").toDate(),
-                lt: date.endOf("day").toDate()
+                gte: date.startOf("day").utc().toDate(),
+                lt: date.endOf("day").utc().toDate()
             }
         },
         include: {

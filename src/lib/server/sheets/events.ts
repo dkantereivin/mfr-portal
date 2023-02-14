@@ -1,5 +1,5 @@
 import {loadSheet} from '$lib/server/sheets/common';
-import dayjs from 'dayjs';
+import {localTime, parseLocal} from '$lib/utils/dates';
 import type {User} from '@prisma/client';
 
 const SHEET_ID = '1pKNVVJU4HdyX5Sa070nqZxK_KIsQIQGGHZgQOkRkZ3Q';
@@ -19,7 +19,7 @@ export interface CommunityEvent {
 }
 
 export class EventSheet {
-    static async forMonth(month: string, year = dayjs().year()) {
+    static async forMonth(month: string, year = localTime().year()) {
         const doc = await loadSheet(SHEET_ID);
         const sheet = doc.sheetsByTitle[month];
         await sheet.loadHeaderRow(1);
@@ -29,7 +29,7 @@ export class EventSheet {
             .map(row => (<CommunityEvent>{
                 eventNumber: row['Event #'],
                 name: row['Event'],
-                date: dayjs(row['Date']).toDate(),
+                date: parseLocal(row['Date']).toDate(),
                 meetAtUnit: row['Meet @ St.John'],
                 meetAtEvent: row['Meet @\nEvent'] ?? row[' Meet @\nEvent'] ?? row['Meet @ Event'],
                 endTime: row['Approx.\nEnd'],
