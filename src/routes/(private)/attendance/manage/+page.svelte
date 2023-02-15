@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { getRank, ROLE_GROUPS } from "$lib/utils/auth";
 	import type { Role } from "@prisma/client";
-    import dayjs from "dayjs";
     import { Popover, Tooltip } from "flowbite-svelte";
     import _ from "lodash";
     import type { PageData } from "./$types";
     import {slide} from "svelte/transition"
-	import { parseLocal } from "$lib/utils/dates";
+	import { dayjs, parseLocal } from "$lib/utils/dates";
 
     export let data: PageData;
     const {trainingDates, memberAttendance, finalizedDates} = data;
@@ -46,7 +45,7 @@
                                             </span>
                                             <br>
                                             <form method="POST" action="?/export">
-                                                <input type="hidden" name="date" value="{date}" />
+                                                <input type="hidden" name="date" value="{dayjs(date).tz().format('YYYY-MM-DD')}" />
                                                 <div class="flex flex-row justify-center items-center space-x-4 mt-2">
                                                     <label for="hours" class="text-md">Hours:</label>
                                                     <input type="number" name="hours" class="w-16 border border-gray-300 rounded-md px-2 py-2" placeholder="Hours" value={2} />

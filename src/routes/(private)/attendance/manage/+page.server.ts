@@ -150,8 +150,8 @@ export const actions = {
         requireRank(locals.user!, Role.CORPORAL, LeadershipDepartment.ADMINISTRATION);
 
         const data = await request.formData();
-        const date = parseLocal(<string>data.get('date'));
-        const dateStr = date.format('YYYY-MM-DD');
+        const dateStr = <string>data.get('date');
+        const date = parseDate(dateStr);
         const hours = <number | null>data.get('hours') ?? 2;
 
         if (!date.isValid()) {
