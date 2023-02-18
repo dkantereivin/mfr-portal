@@ -32,10 +32,10 @@ enum TagActions {
 }
 
 model User {
-  id        String  @id @default(cuid())
-  googleId  String  @unique
-  contId    String  @unique
-  email     String  @unique
+  id        String @id @default(cuid())
+  googleId  String @unique
+  contId    String @unique
+  email     String @unique
   firstName String
   lastName  String
 
@@ -44,6 +44,7 @@ model User {
 
   sessions   Session[]
   attendance Attendance[]
+  events     EventMember[]
 
   refreshToken String
 
@@ -92,4 +93,36 @@ model NfcTag {
   description String?
   payload     String
   versionCode String
+}
+
+model Event {
+  id String @id @default(cuid())
+
+  checksum    String
+  eventNumber String
+  name        String
+  stringDate  String
+  unitTime    DateTime?
+  startTime   DateTime?
+  endTime     DateTime?
+  location    String
+  equipment   String?
+  members     EventMember[]
+
+  refreshedAt DateTime @default(now())
+
+  @@unique([eventNumber, stringDate])
+}
+
+model EventMember {
+  userId      String
+  user        User    @relation(fields: [userId], references: [id])
+  eventId     String
+  event       Event   @relation(fields: [eventId], references: [id])
+  position    String
+  meetAtEvent Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, eventId])
 }

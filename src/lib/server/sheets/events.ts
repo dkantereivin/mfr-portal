@@ -12,6 +12,7 @@ export interface CommunityEvent {
 	eventNumber: string;
 	name: string;
 	date: Date;
+	stringDate: string;
 	meetAtUnit?: string; // no need to bother with dates for now
 	meetAtEvent?: string;
 	endTime?: string;
@@ -35,6 +36,7 @@ export class EventSheet {
 						eventNumber: row['Event #'],
 						name: row['Event'],
 						date: parseLocal(row['Date']).toDate(),
+						stringDate: row['Date'],
 						meetAtUnit: row['Meet @ St.John'],
 						meetAtEvent: row['Meet @\nEvent'] ?? row[' Meet @\nEvent'] ?? row['Meet @ Event'],
 						endTime: row['Approx.\nEnd'],
