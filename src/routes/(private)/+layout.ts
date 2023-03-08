@@ -1,4 +1,5 @@
 import type { Config } from "@sveltejs/adapter-vercel"
 export const config: Config = {
-    split: true
+    split: true,
+    runtime: 'nodejs18.x'
 }
