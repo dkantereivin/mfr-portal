@@ -10,7 +10,7 @@
     } from "flowbite-svelte";
     import {sineIn} from "svelte/easing";
     import {hasRank} from '$lib/utils/auth';
-    import {LeadershipDepartment, Role} from '@prisma/client';
+    import {LeadershipDepartment, Role} from '$lib/models/user.model';
     import {page} from '$app/stores';
 
     let hidden = true;

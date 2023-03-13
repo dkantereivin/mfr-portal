@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getRank, ROLE_GROUPS } from "$lib/utils/auth";
-	import type { Role } from "@prisma/client";
+	import type { Role } from "$lib/models";
     import { Popover, Tooltip } from "flowbite-svelte";
     import _ from "lodash";
     import type { PageData } from "./$types";
@@ -8,7 +8,7 @@
 	import { dayjs, parseLocal } from "$lib/utils/dates";
 
     export let data: PageData;
-    const {trainingDates, memberAttendance, finalizedDates} = data;
+    const {memberAttendance, finalizedDates} = data;
 
     const membersForRoles = (roles: Role[]) => _.sortBy(
         memberAttendance.filter(({user}) => roles.includes(user.role)),

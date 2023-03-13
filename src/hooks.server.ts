@@ -1,4 +1,5 @@
-import { db } from '$lib/server/db';
+// import type { IUser } from '$lib/models';
+import { redis, sessionKey } from '$lib/server/redis';
 import { SESSION_COOKIE_ID } from '$lib/utils/cookies';
 import type {Handle} from '@sveltejs/kit';
 
@@ -10,23 +11,16 @@ export const handle = (async ({ event, resolve }) => {
         return resolve(event);
     }
 
-    const session = await db.session.findFirst({
-        where: {
-            id: sessionId
-        },
-        include: {
-            user: true
-        }
-    });
-
-    if (!session || session.expiresAt < new Date()) {
+    const session = await redis.get(sessionKey(sessionId));
+    if (!session) {
         event.cookies.delete(SESSION_COOKIE_ID, {path: '/'});
         event.locals.authenticated = false;
         return resolve(event);
     }
 
     event.locals.authenticated = true;
-    event.locals.user = session.user;
+    event.locals.user = JSON.parse(session);
+    console.log('all is going well!')
 
     return resolve(event);
 }) satisfies Handle;

@@ -1,6 +1,6 @@
 import {loadSheet} from '$lib/server/sheets/common';
 import type {GoogleSpreadsheetRow} from 'google-spreadsheet';
-import {type User, Role, LeadershipDepartment} from '@prisma/client';
+import {type IUser, Role, LeadershipDepartment} from '$lib/models/user.model';
 
 const SHEET_ID = '1Pj8jL_Pwae2wNqk57w5BICy4FcCk5UxdqqgmYP497Hk';
 
@@ -20,14 +20,14 @@ export class MasterSheet {
 
         const rows = await sheet.getRows();
         const user = rows.find(row => row['SJA Email Address']?.toLowerCase() === email.toLowerCase());
-        if (!user) return {};
+        if (!user) return null;
         return {
             contId: <string>user['Member ID'],
             firstName: <string>user['Given Names'],
             lastName: <string>user['Surname'],
             role: this.parseRank(user['Rank']),
-            dept: <LeadershipDepartment | undefined>user['Leadership Department'],
-        } satisfies Partial<User>;
+            dept: <LeadershipDepartment>user['Leadership Department'],
+        } satisfies Partial<IUser>;
     }
 
     private static parseRank(rank: string): Role {
