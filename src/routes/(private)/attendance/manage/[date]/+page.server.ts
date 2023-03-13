@@ -1,9 +1,8 @@
 import type { PageServerLoad } from "./$types";
-import dayjs, { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
 import {error} from "@sveltejs/kit"
-import {db} from "$lib/server/db";
 import { requireRank } from "$lib/utils/auth";
-import {Role, LeadershipDepartment, User} from "$lib/models";
+import {Role, LeadershipDepartment, User} from "$lib/models/server";
 import { localTime, parseDate } from "$lib/utils/dates";
 
 export const load = (async ({params, locals}) => {

@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
 import {redirect} from '@sveltejs/kit';
-import { Attendance, AttendanceCode } from "$lib/models";
+import { Attendance, AttendanceCode } from "$lib/models/server";
 
 export const load = (async ({locals, url}) => {
     const code = url.searchParams.get('code')?.trim().toUpperCase();

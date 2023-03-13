@@ -1,10 +1,8 @@
 import type {PageServerLoad} from './$types';
-import {db} from '$lib/server/db';
-import { Role, LeadershipDepartment } from '$lib/models/user.model';
 import { requireManageAttendance } from '$lib/utils/auth';
 import { randomString } from '$lib/utils/misc';
 import { localTime } from '$lib/utils/dates';
-import { AttendanceCode } from '$lib/models';
+import { AttendanceCode } from '$lib/models/server';
 
 export const load = (async ({locals}) => {
     requireManageAttendance(locals.user);

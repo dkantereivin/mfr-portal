@@ -1,4 +1,4 @@
-import { getModelForClass, prop, PropType } from "@typegoose/typegoose";
+import { prop, PropType } from "@typegoose/typegoose";
 import type mongoose from "mongoose";
 import { Attendance } from "./attendance.model";
 
@@ -59,5 +59,3 @@ export class IUser {
     @prop({required: true, type: () => [Attendance], default: [], select: false}, PropType.ARRAY)
     attendance!: mongoose.Types.Array<Attendance>;
 }
-
-export const User = getModelForClass(IUser);

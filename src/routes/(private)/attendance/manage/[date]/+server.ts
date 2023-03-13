@@ -1,5 +1,4 @@
 // import type { RequestHandler } from "./$types";
-// import { db } from "$lib/server/db";
 // import { requireRank } from "$lib/utils/auth";
 // import {Role, LeadershipDepartment} from "@prisma/client";
 // import dayjs from "dayjs";

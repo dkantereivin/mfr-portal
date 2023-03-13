@@ -1,13 +1,11 @@
 import type {PageServerLoad} from './$types';
-import {db} from '$lib/server/db';
 import type { Dayjs } from 'dayjs';
-import {dayjs, localTime, parseDate, parseLocal, parseUtc, trainingTimeForDate} from '$lib/utils/dates';
-// import { User } from '@prisma/client';
+import {dayjs, localTime, parseDate, parseUtc, trainingTimeForDate} from '$lib/utils/dates';
 import _ from 'lodash';
 import { requireManageAttendance, requireRank } from '$lib/utils/auth';
 import { Actions, error, fail } from '@sveltejs/kit';
 import { HoursEntry, HoursSheet } from '$lib/server/sheets/hours';
-import { Attendance, IUser, LeadershipDepartment, Role, User } from '$lib/models';
+import { Attendance, docToSerializableJSON, IUser, LeadershipDepartment, Role, User } from '$lib/models/server';
 
 const getNext = (dayOfWeek: number, from: Dayjs) => {
     const next = from.weekday(dayOfWeek);
@@ -35,13 +33,15 @@ export const load = (async ({url, locals}) => {
     
     const users = await User.find({
         role: {$ne: Role.NONE}
-    });
+    }).select('+attendance');
+    console.log(users.map(docToSerializableJSON));
+    
 
     const periodicTrainingDates = getDatesBetween(from, to, 2).reverse(); // local
-    type MemberAttendance = {user: IUser, attendanceDates: Record<string, boolean>};
+    type MemberAttendance = {user: Record<string, any>, attendanceDates: Record<string, boolean>};
     const finalizedDates: Map<string, boolean> = new Map();
     const memberAttendance: MemberAttendance[] = users.map(user => ({
-        user,
+        user: docToSerializableJSON(user),
         attendanceDates: _.fromPairs(periodicTrainingDates.map(date => {
             const key = date.format('YYYY-MM-DD');
             const attendance = user.attendance.find(
@@ -74,17 +74,17 @@ export const actions = {
             return fail(400, {message: 'Unexpected Error: Invalid date.'});
         }
 
-        return await db.attendance.create({
-            data: {
-                time: date.utc().toDate(),
-                code: `MANUAL: ${locals.user!.firstName} ${locals.user!.lastName}`,
-                user: {
-                    connect: {
-                        id: userId
-                    }
-                }
-            }
-        });
+        // return await db.attendance.create({
+        //     data: {
+        //         time: date.utc().toDate(),
+        //         code: `MANUAL: ${locals.user!.firstName} ${locals.user!.lastName}`,
+        //         user: {
+        //             connect: {
+        //                 id: userId
+        //             }
+        //         }
+        //     }
+        // });
     },
 
     delete: async ({locals, request}) => {
@@ -101,15 +101,15 @@ export const actions = {
             return fail(400, {message: 'Unexpected Error: Invalid date.'});
         }
 
-        await db.attendance.deleteMany({
-            where: {
-                userId,
-                time: {
-                    gte: date.startOf('day').utc().toDate(),
-                    lte: date.endOf('day').utc().toDate()
-                }
-            }
-        });
+        // await db.attendance.deleteMany({
+        //     where: {
+        //         userId,
+        //         time: {
+        //             gte: date.startOf('day').utc().toDate(),
+        //             lte: date.endOf('day').utc().toDate()
+        //         }
+        //     }
+        // });
 
         return 'OK';
     },
@@ -126,35 +126,35 @@ export const actions = {
             return fail(400, {message: 'Unexpected Error: Invalid date.'});
         }
         
-        await db.attendance.updateMany({
-            where: {
-                time: {
-                    gte: date.startOf('day').utc().toDate(),
-                    lte: date.endOf('day').utc().toDate()
-                }
-            },
-            data: {
-                isFinalized: true
-            }
-        });
+        // await db.attendance.updateMany({
+        //     where: {
+        //         time: {
+        //             gte: date.startOf('day').utc().toDate(),
+        //             lte: date.endOf('day').utc().toDate()
+        //         }
+        //     },
+        //     data: {
+        //         isFinalized: true
+        //     }
+        // });
 
-        const attendances = await db.attendance.findMany({
-            where: {
-                time: {
-                    gte: trainingTimeForDate(dateStr).utc().toDate(),
-                    lte: trainingTimeForDate(dateStr).endOf('day').utc().toDate()
-                }
-            },
-            include: {
-                user: true
-            },
-            distinct: ['userId']
-        });
+        // const attendances = await db.attendance.findMany({
+        //     where: {
+        //         time: {
+        //             gte: trainingTimeForDate(dateStr).utc().toDate(),
+        //             lte: trainingTimeForDate(dateStr).endOf('day').utc().toDate()
+        //         }
+        //     },
+        //     include: {
+        //         user: true
+        //     },
+        //     distinct: ['userId']
+        // });
 
-        const users = attendances.map(a => a.user);
-        const entry: HoursEntry = {date, hours};
+        // const users = attendances.map(a => a.user);
+        // const entry: HoursEntry = {date, hours};
 
-        await HoursSheet.addMultipleMemberHours(users, 'training', entry);
+        // await HoursSheet.addMultipleMemberHours(users, 'training', entry);
 
         return 'OK';
     }

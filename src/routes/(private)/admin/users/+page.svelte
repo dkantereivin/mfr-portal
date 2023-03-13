@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getRank, LEADERSHIP_DEPARTMENTS, ROLE_GROUPS, ROLE_RANKING } from "$lib/utils/auth";
-	import type { Role, IUser } from "$lib/models/user.model";
-	import { Input, Label, Modal, Select, Button } from "flowbite-svelte";
+	import type { Role, IUser } from "$lib/models/client";
+	import { Input, Label, Modal, Select } from "flowbite-svelte";
 	import _ from "lodash";
     import type {PageData} from "./$types";
     
@@ -67,7 +67,7 @@
 
     <Modal bind:open={showUserEditModal} title="Edit User" size="lg">
         <form method="POST" action="?/editUser">
-            User ID: <h1>{userEditModalSelection.id}</h1>
+            User ID: <h1>{userEditModalSelection._id}</h1>
             <input type="hidden" name="id" bind:value={userEditModalSelection._id} />
             <br>
             <p>

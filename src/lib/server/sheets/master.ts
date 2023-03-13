@@ -1,6 +1,6 @@
 import {loadSheet} from '$lib/server/sheets/common';
 import type {GoogleSpreadsheetRow} from 'google-spreadsheet';
-import {type IUser, Role, LeadershipDepartment} from '$lib/models/user.model';
+import {type IUser, Role, LeadershipDepartment} from '$lib/models/client';
 
 const SHEET_ID = '1Pj8jL_Pwae2wNqk57w5BICy4FcCk5UxdqqgmYP497Hk';
 

@@ -1,14 +1,14 @@
 import type {GoogleSpreadsheet} from 'google-spreadsheet';
 import {loadSheet} from '$lib/server/sheets/common';
-import { Role, User } from '@prisma/client';
+import { Role, IUser } from '$lib/models/client';
 import _ from 'lodash';
 import type { Dayjs } from 'dayjs';
 import { dayjs, parseDate, parseLocal } from '$lib/utils/dates';
 
 const SHEET_ID = '1vbz3bY6ldRxfZ6y_h0W1rP1zTe1Y7oZs2rQIavnggSk';
 
-type PartialUser = Pick<User, 'firstName' | 'lastName' | 'contId'>;
-type PartialUserWithRole = PartialUser & {role: User['role']};
+type PartialUser = Pick<IUser, 'firstName' | 'lastName' | 'contId'>;
+type PartialUserWithRole = PartialUser & {role: IUser['role']};
 
 export type HoursEntry = {
     date: string | Dayjs;
@@ -48,7 +48,7 @@ export class HoursSheet {
         await sheet.loadCells('A1');
 
         const header = sheet.getCellByA1('A1').value.toString().trim();
-        if (!header.endsWith(user.contId)) {
+        if (user.contId && !header.endsWith(user.contId)) {
             throw new Error(`Sheet name does not match SJA ID for ${sheetName}`);
         }
 
