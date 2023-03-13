@@ -20,7 +20,6 @@ export const handle = (async ({ event, resolve }) => {
 
     event.locals.authenticated = true;
     event.locals.user = JSON.parse(session);
-    console.log('all is going well!')
 
     return resolve(event);
 }) satisfies Handle;

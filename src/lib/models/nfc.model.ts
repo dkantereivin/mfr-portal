@@ -1,4 +1,4 @@
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { prop } from "@typegoose/typegoose";
 
 export enum TagActions {
     ATTENDANCE = 'ATT'
@@ -23,5 +23,3 @@ export class INfcTag {
     @prop({required: false, type: String})
     description?: string;
 }
-
-export const NfcTag = getModelForClass(INfcTag);

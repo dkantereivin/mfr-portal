@@ -1,7 +1,6 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import {SESSION_COOKIE_ID} from '$lib/utils/cookies';
 import {redirect} from '@sveltejs/kit';
-import { db } from '$lib/server/db';
 import { redis, sessionKey } from '$lib/server/redis';
 
 export const GET = (async ({cookies}) => {

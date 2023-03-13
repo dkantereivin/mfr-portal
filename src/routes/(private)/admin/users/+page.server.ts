@@ -1,4 +1,4 @@
-import { IUser, LeadershipDepartment, Role, User } from "$lib/models";
+import { IUser, LeadershipDepartment, Role, User } from "$lib/models/server";
 import { requireRank } from "$lib/utils/auth";
 import { Actions, fail } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";

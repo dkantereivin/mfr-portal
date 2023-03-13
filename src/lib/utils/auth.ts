@@ -1,4 +1,4 @@
-import { LeadershipDepartment, Role, IUser } from '$lib/models/user.model';
+import { LeadershipDepartment, Role, IUser } from '$lib/models/client';
 import { error } from '@sveltejs/kit';
 
 export const ROLE_RANKING: Role[] = [

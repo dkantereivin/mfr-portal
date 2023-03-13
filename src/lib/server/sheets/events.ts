@@ -1,10 +1,10 @@
 import {loadSheet} from '$lib/server/sheets/common';
 import {localTime, parseLocal} from '$lib/utils/dates';
-import type {User} from '@prisma/client';
+import type {IUser} from '$lib/models/client';
 
 const SHEET_ID = '1pKNVVJU4HdyX5Sa070nqZxK_KIsQIQGGHZgQOkRkZ3Q';
 
-type EventMember = Pick<User, 'firstName' | 'lastName'> & {role: string, meetAt?: 'unit' | 'event'};
+type EventMember = Pick<IUser, 'firstName' | 'lastName'> & {role: string, meetAt?: 'unit' | 'event'};
 export interface CommunityEvent {
     eventNumber: string;
     name: string;

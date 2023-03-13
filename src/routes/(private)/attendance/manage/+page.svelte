@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getRank, ROLE_GROUPS } from "$lib/utils/auth";
-	import type { Role } from "$lib/models";
+	import type { Role } from "$lib/models/client";
     import { Popover, Tooltip } from "flowbite-svelte";
     import _ from "lodash";
     import type { PageData } from "./$types";

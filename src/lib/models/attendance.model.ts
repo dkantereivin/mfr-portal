@@ -1,8 +1,19 @@
 import { localTime, parseUtc } from "$lib/utils/dates";
-import { IUser, User } from "./user.model";
-import { getModelForClass, prop, type Ref } from "@typegoose/typegoose";
-import { INfcTag, NfcTag } from "./nfc.model";
+import { IUser } from "./user.model";
+import type { UserType } from "./user.model.server";
+import { prop, type Ref } from "@typegoose/typegoose";
+import { INfcTag } from "./nfc.model";
+import type { NfcTagType } from "./nfc.model.server";
 import type { ObjectId } from "mongoose";
+import { browser } from "$app/environment";
+import type { AttendanceCodeType } from "./attendance.model.server";
+
+// let User: UserType, NfcTag: NfcTagType, AttendanceCode: AttendanceCodeType;
+// if (!browser) {
+//     AttendanceCode = (await import("./attendance.model.server")).AttendanceCode;
+//     NfcTag = (await import("./nfc.model.server")).NfcTag;
+//     User = (await import("./user.model.server")).User;
+// }
 
 class AttendanceAuthorization {
     @prop({ref: () => IUser})
@@ -28,26 +39,26 @@ export class Attendance {
     @prop({required: true, type: Boolean, default: false})
     finalized!: boolean;
 
-    async generateDescription() {
-        switch (this.method) {
-            case "manual":
-                const officer = await User.findById(this.authorization.officer);
-                return `Manually added by ${officer?.firstName} ${officer?.lastName}.`;
-            case "code":
-                const code = await AttendanceCode.findById(this.authorization.code);
-                const codeCreator = await User.findById(code?.creator);
-                return `Checked in at ${parseUtc(this.timestamp).format()} using code ${code?.code} created by ${codeCreator?.firstName} ${codeCreator?.lastName}.`;
-            case "nfc":
-                const nfc = await NfcTag.findById(this.authorization.nfc);
-                return `Checked in at ${parseUtc(this.timestamp).format()} using NFC tag ${nfc?.name}.`
-        }
-    }
+    // async generateDescription() {
+    //     switch (this.method) {
+    //         case "manual":
+    //             const officer = await User.findById(this.authorization.officer);
+    //             return `Manually added by ${officer?.firstName} ${officer?.lastName}.`;
+    //         case "code":
+    //             const code = await AttendanceCode.findById(this.authorization.code);
+    //             const codeCreator = await User.findById(code?.creator);
+    //             return `Checked in at ${parseUtc(this.timestamp).format()} using code ${code?.code} created by ${codeCreator?.firstName} ${codeCreator?.lastName}.`;
+    //         case "nfc":
+    //             const nfc = await NfcTag.findById(this.authorization.nfc);
+    //             return `Checked in at ${parseUtc(this.timestamp).format()} using NFC tag ${nfc?.name}.`
+    //     }
+    // }
 
-    static async appendToUser(userId: ObjectId, attendance: Attendance) {
-        const user = await User.findById(userId);
-        user!.attendance.push(attendance);
-        await user!.save();
-    }
+    // static async appendToUser(userId: ObjectId, attendance: Attendance) {
+    //     const user = await User.findById(userId);
+    //     user!.attendance.push(attendance);
+    //     await user!.save();
+    // }
 }
 
 export class IAttendanceCode {
@@ -63,5 +74,3 @@ export class IAttendanceCode {
     @prop({required: true, type: Date, default: Date.now})
     createdAt!: Date;
 }
-
-export const AttendanceCode = getModelForClass(IAttendanceCode);

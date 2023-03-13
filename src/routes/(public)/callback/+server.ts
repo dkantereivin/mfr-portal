@@ -3,7 +3,7 @@ import type { RequestEvent } from "./$types";
 import { client } from "$lib/server/googleAuth";
 import { SESSION_COOKIE_ID, hardenedCookie, LOGIN_REDIRECT_TO } from "$lib/utils/cookies";
 import {MasterSheet} from '$lib/server/sheets/master';
-import { User } from "$lib/models";
+import { User } from "$lib/models/server";
 import { randomString } from "$lib/utils/misc";
 import { redis, sessionKey } from "$lib/server/redis";
 

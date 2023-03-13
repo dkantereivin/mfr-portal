@@ -1,4 +1,4 @@
-import type { IUser } from '$lib/models/user.model';
+import type { IUser } from '$lib/models/models.client';
 
 declare global {
 	namespace App {

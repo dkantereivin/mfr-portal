@@ -1,9 +1,7 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import {error, redirect} from '@sveltejs/kit';
-import {db} from '$lib/server/db';
 import { LOGIN_REDIRECT_TO, standardCookie } from '$lib/utils/cookies';
-import { NfcTag, TagActions } from '$lib/models/nfc.model';
-import { Attendance, AttendanceCode } from '$lib/models';
+import { Attendance, NfcTag, TagActions } from '$lib/models/server';
 
 export const GET = (async ({url, params, locals, cookies}) => {
     if (!locals.authenticated) {
@@ -32,13 +30,8 @@ export const GET = (async ({url, params, locals, cookies}) => {
         );
     }
 
-    await db.nfcTag.update({
-        where: {uid},
-        data: {
-            lastUsed: new Date(),
-            count: count + 1
-        }
-    });
+    tag.count += 1;
+    await tag.save();
 
     switch (tag.action) {
         case TagActions.ATTENDANCE:
