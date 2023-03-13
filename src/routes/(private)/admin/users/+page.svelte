@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getRank, LEADERSHIP_DEPARTMENTS, ROLE_GROUPS, ROLE_RANKING } from "$lib/utils/auth";
-	import type { Role, User } from "@prisma/client";
+	import type { Role, IUser } from "$lib/models/user.model";
 	import { Input, Label, Modal, Select, Button } from "flowbite-svelte";
 	import _ from "lodash";
     import type {PageData} from "./$types";
@@ -8,13 +8,13 @@
     export let data: PageData;
     const {users} = data;
 
-    const membersForRoles = (roles: Role[]): User[] => _.sortBy(
-        users.filter((user: User) => roles.includes(user.role)),
+    const membersForRoles = (roles: Role[]): IUser[] => _.sortBy(
+        users.filter((user: IUser) => roles.includes(user.role)),
         [(user) => -getRank(user.role), (user) => user.lastName]
     );
 
-    let showUserEditModal = data.activeUser.id.length > 0;
-    let userEditModalSelection: Omit<User, 'refreshToken'> = data.activeUser;
+    let showUserEditModal = data.activeUser !== null;
+    let userEditModalSelection: Omit<IUser, 'refreshToken'> = data.activeUser!;
 
     const rankOptions = ROLE_RANKING.map((rank) => ({value: rank, name: rank}));
     const deptOptions = LEADERSHIP_DEPARTMENTS.map((dept) => ({value: dept, name: dept}));
@@ -40,7 +40,7 @@
                     <tr>
                         <td colspan="100">{selectedGroup}</td>
                     </tr>
-                    {#each membersForRoles(selectedRoles) as user (user.id)}
+                    {#each membersForRoles(selectedRoles) as user (user._id)}
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                             on:click={() => {
                                 showUserEditModal = true;
@@ -55,7 +55,7 @@
                             </td>
                             <td class="px-6 py-3">{user.email}</td>
                             <td class="px-6 py-3">{user.contId}</td>
-                            <td class="px-6 py-3">{user.id}</td>
+                            <td class="px-6 py-3">{user._id}</td>
                             <td class="px-6 py-3">{user.role}</td>
                             <td class="px-6 py-3">{user.dept}</td>
                         </tr>
@@ -68,7 +68,7 @@
     <Modal bind:open={showUserEditModal} title="Edit User" size="lg">
         <form method="POST" action="?/editUser">
             User ID: <h1>{userEditModalSelection.id}</h1>
-            <input type="hidden" name="id" bind:value={userEditModalSelection.id} />
+            <input type="hidden" name="id" bind:value={userEditModalSelection._id} />
             <br>
             <p>
                 <span class="text-red-600">Danger:</span> use extreme caution when editing users name, email, or alliance number.

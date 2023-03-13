@@ -5,7 +5,7 @@
     import {Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell} from 'flowbite-svelte'
 
     export let data: PageData;
-    let date: string = data.date;
+    let date = <string>data.date;
 
     const deleteAttendance = async (id: string) => {
         const res = await fetch(`/api/attendance/${id}`, {

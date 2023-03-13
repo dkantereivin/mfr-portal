@@ -1,4 +1,4 @@
-import {LeadershipDepartment, Role, User} from '@prisma/client';
+import { LeadershipDepartment, Role, IUser } from '$lib/models/user.model';
 import { error } from '@sveltejs/kit';
 
 export const ROLE_RANKING: Role[] = [
@@ -30,7 +30,7 @@ export const ROLE_GROUPS: [string, Role[]][] = [
 export const getRank = (role: Role): number => ROLE_RANKING.indexOf(role);
 export const getRole = (rank: number): Role => ROLE_RANKING[rank];
 
-export const requireRank = (user: User, role: Role, dept?: LeadershipDepartment | LeadershipDepartment[]): boolean => {
+export const requireRank = (user: IUser, role: Role, dept?: LeadershipDepartment | LeadershipDepartment[]): boolean => {
     if (user.role === Role.SUPER_ADMIN) return true;
     if (getRank(user.role) < getRank(role))
         throw error(403, 'This page can only be accessed by ' + role + 's and above.');
@@ -46,10 +46,12 @@ export const requireRank = (user: User, role: Role, dept?: LeadershipDepartment 
     }
 }
 
-export const hasRank = (user: User, role: Role, dept?: LeadershipDepartment | LeadershipDepartment[]): boolean => {
+export const hasRank = (user: IUser, role: Role, dept?: LeadershipDepartment | LeadershipDepartment[]): boolean => {
     try {
         return requireRank(user, role, dept);
     } catch (e) {
         return false;
     }
 }
+
+export const requireManageAttendance = (user: IUser) => requireRank(user, Role.CORPORAL, [LeadershipDepartment.ADMINISTRATION, LeadershipDepartment.TRAINING]);

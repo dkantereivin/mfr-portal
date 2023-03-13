@@ -1,9 +1,16 @@
 services:
-  postgres:
-    image: postgres:9.6
+  mongo:
+    image: mongo
     ports:
-      - "5432:5432"
+      - "27017:27017"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      MONGO_INITDB_ROOT_USERNAME: dev
+      MONGO_INITDB_ROOT_PASSWORD: pswrd
+      MONGO_INITDB_DATABASE: d0007
+    restart: unless-stopped
+
+  redis:
+    image: redis:3.2
+    ports:
+      - "6379:6379"
+    restart: unless-stopped

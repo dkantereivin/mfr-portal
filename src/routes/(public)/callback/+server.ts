@@ -1,11 +1,11 @@
 import { error, redirect } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
-import { createClient } from "$lib/server/googleAuth";
-import { db } from "$lib/server/db";
+import { client } from "$lib/server/googleAuth";
 import { SESSION_COOKIE_ID, hardenedCookie, LOGIN_REDIRECT_TO } from "$lib/utils/cookies";
-import dayjs from "dayjs";
 import {MasterSheet} from '$lib/server/sheets/master';
-import { utcTime } from "$lib/utils/dates";
+import { User } from "$lib/models";
+import { randomString } from "$lib/utils/misc";
+import { redis, sessionKey } from "$lib/server/redis";
 
 export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     const code = url.searchParams.get("code");
@@ -14,68 +14,54 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
         throw error(400, "Error authenticating with Google.");
     }
 
-    const client = createClient();
-
     const {tokens} = await client.getToken(code);
     client.setCredentials(tokens);
 
     const res = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.access_token}`);
     const data = await res.json();
     
-    const {refresh_token} = tokens;
+    const {refresh_token: refreshToken} = tokens;
 
     if (!data.email) {
         throw error(400, "No email provided by Google.");
     }
 
-    let user = await db.user.findFirst({
-        where: {
-            email: data.email!
-        }
-    });
+    let user = await User.findOne({email: data.email});
+    console.log(`User: ${user}`)
 
-    if (!user) {
-        if (!refresh_token) {
-            throw error(400, "No refresh token provided by Google.");
-        }
-        const sjaInfo = await MasterSheet.getUserData(data.email);
-        if (!sjaInfo.contId) {
-            throw error(400, "No SJA Alliance ID found. Please contact the web administrator.");
+    if (user && refreshToken) {
+        user.google = {id: data.id, refreshToken};
+        await user.save();
+    } else if (!user) {
+        user = new User();
+        user.email = data.email;
+        
+        // populate with data from SJA Master Sheet if available
+        const info = await MasterSheet.getUserData(data.email);
+        if (info) {
+            user.firstName = info.firstName;
+            user.lastName = info.lastName;
+            user.contId = info.contId;
+            user.role = info.role;
+            user.dept = info.dept;
+        } else {
+            user.firstName = data.given_name;
+            user.lastName = data.family_name;
         }
 
-        user = await db.user.create({
-            data: {
-                firstName: sjaInfo.firstName ?? data.given_name,
-                lastName: sjaInfo.lastName ?? data.family_name,
-                role: sjaInfo.role ?? "NONE",
-                dept: sjaInfo.dept ?? "NONE",
-                contId: sjaInfo.contId,
-                googleId: data.id!,
-                email: data.email,
-                refreshToken: refresh_token
-            }
-        });
-    } else if (refresh_token) { // user exists but Google has sent a new refresh token
-        await db.user.update({
-            where: {
-                id: user.id
-            },
-            data: {
-                refreshToken: refresh_token
-            }
-        });
+        // optionally add refresh token, don't throw if not
+        if (refreshToken) {
+            user.google = {id: data.id, refreshToken};
+        }
+
+        await user.save();
     }
 
-    // create session
-    const TTL = utcTime().add(12 * 7, "hours").toDate();
-    const session = await db.session.create({
-        data: {
-            userId: user.id,
-            expiresAt: TTL
-        }
-    });
+    const sessionId = randomString(32);
+    const TTL = 60 * 60 * 24 * 14; // 14 days (in seconds)
 
-    cookies.set(SESSION_COOKIE_ID, session.id, hardenedCookie());
+    await redis.set(sessionKey(sessionId), user.toJSON(), "EX", TTL);
+    cookies.set(SESSION_COOKIE_ID, sessionId, hardenedCookie());
 
     const redirectTo = cookies.get(LOGIN_REDIRECT_TO) ?? "/dashboard";
     cookies.delete(LOGIN_REDIRECT_TO, {path: '/'});

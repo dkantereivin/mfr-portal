@@ -1,11 +1,11 @@
-import {User} from '@prisma/client';
+import type { IUser } from '$lib/models/user.model';
 
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
 			authenticated?: boolean;
-			user: User;
+			user: IUser;
 		}
 		interface PageData {}
 		// interface Platform {}

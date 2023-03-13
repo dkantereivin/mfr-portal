@@ -1,5 +1,5 @@
 import { redirect } from "@sveltejs/kit";
-import { createClient } from "$lib/server/googleAuth";
+import { client } from "$lib/server/googleAuth";
 
 const scope = [
     "https://www.googleapis.com/auth/userinfo.email",
@@ -7,11 +7,11 @@ const scope = [
 ];
 
 export function GET(): Response {
-    const client = createClient();
     const url = client.generateAuthUrl({
         access_type: "offline",
         scope,
-        include_granted_scopes: true
+        include_granted_scopes: true,
+        hd: "sjacs.ca"
     });
 
     throw redirect(302, url);
