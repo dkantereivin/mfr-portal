@@ -40,7 +40,9 @@ __Planned Major Features:__
 __Planned Minor Features:__
 - allow users to edit their own preferred names and import from Google Sheets (priority: high)
 - prettier dashboard which summarizes attendance, events, and member contract status (priority: medium)
-
+- automated test cases (priority: medium)
+    - would be extremely useful if someone else took this on
+- better logging using Sentry or similar (priority: high)
 
 ## Technical Details
 This section may not be relevant to most people within the St John Ambulance branch - if 
