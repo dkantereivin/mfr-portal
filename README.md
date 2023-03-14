@@ -75,11 +75,11 @@ I instead call their API using custom code in `src/lib/server/doppler.ts`.
 As such, the only following environment variables are required in the container itself:
 ```env
 # required at build time
-PUBLIC_BASE_URL="http://localhost:5173"
+PUBLIC_BASE_URL="https://mfr.sjahamilton.ca"
 
 # required at runtime only
-NODE_ENV="development"
-DOPPLER_TOKEN="dp.pt.U29ZzOw9RA7xMzpGhLaOFDQ5JLYbKCcsbsPkj5oAYV1"
+NODE_ENV="production"
+DOPPLER_TOKEN="DOPPLER PERSONAL OR SERVICE TOKEN"
 ```
 Where possible, I highly suggest setting these via Docker compose,
 usually from the host machine's environment variables or a `.env` file.
