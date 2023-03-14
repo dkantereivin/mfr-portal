@@ -1,4 +1,4 @@
-import vercel from '@sveltejs/adapter-vercel';
+import nodejs from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -8,7 +8,7 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: vercel()
+		adapter: nodejs()
 	}
 };
 
