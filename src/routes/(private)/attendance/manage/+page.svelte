@@ -82,7 +82,7 @@
                                         <div class="flex flex-row justify-evenly">
                                             <form method="POST" class="contents">
                                                 <input type="hidden" name="date" value="{date}" />
-                                                <input type="hidden" name="userId" value="{user.id}" />
+                                                <input type="hidden" name="userId" value="{user._id}" />
                                                 <button formaction="?/create" class="px-2 py-1 text-green-500 rounded-md hover:bg-green-500 hover:text-white">✅</button>
                                                 <button formaction="?/delete" class="px-2 py-1 text-red-500 rounded-md hover:bg-red-500 hover:text-white">❌</button>
                                             </form>

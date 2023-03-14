@@ -32,19 +32,19 @@ class GoogleOAuth {
 export class IUser {
     _id?: mongoose.Types.ObjectId;
 
-    @prop({required: true, type: String})
+    @prop({required: true, type: String, index: true})
     firstName!: string;
 
     @prop({required: false, type: String})
     preferredName?: string;
 
-    @prop({required: true, type: String})
+    @prop({required: true, type: String, index: true})
     lastName!: string;
 
     @prop({required: true, unique: true, type: String})
     email!: string;
 
-    @prop({require: false, type: String})
+    @prop({require: false, type: String, index: true})
     contId?: string;
 
     @prop({required: false, _id: false, type: GoogleOAuth, select: false})

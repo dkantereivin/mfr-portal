@@ -1,4 +1,4 @@
-import { IUser, LeadershipDepartment, Role, User } from "$lib/models/server";
+import { IUser, jsonSanitize, LeadershipDepartment, Role, User } from "$lib/models/server";
 import { requireRank } from "$lib/utils/auth";
 import { Actions, fail } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -6,12 +6,15 @@ import type { PageServerLoad } from "./$types";
 export const load = (async ({locals, url}) => {
     requireRank(locals!.user, Role.CORPORAL, LeadershipDepartment.ADMINISTRATION);
 
-    const userId = url.searchParams.get("id") ?? "";
-        const activeUser: IUser | null = await User.findById(userId) ?? null;
+    const userId = url.searchParams.get("id");
+    const activeUser: IUser | null = userId ? (await User.findById(userId) ?? null) : null;
 
     const users = await User.find().sort({lastName: 1}).exec();
 
-    return {users, activeUser};
+    return jsonSanitize({
+        users,
+        activeUser
+    });
 }) satisfies PageServerLoad;
 
 export const actions = {
@@ -23,7 +26,7 @@ export const actions = {
         const user = await User.findById(id);
         if (!user) return fail(400, {message: "User Not Found."});
 
-        const toRank = <Role>form.get("rank");
+        const toRank = <Role>form.get("role");
 
         requireRank(locals!.user, Role.CORPORAL, LeadershipDepartment.ADMINISTRATION);
         requireRank(locals!.user, user.role);
