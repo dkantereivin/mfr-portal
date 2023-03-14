@@ -1,7 +1,8 @@
 # MFR Portal (St John Ambulance D0007)
 A full-stack web portal built for volunteers at Hamilton's St. John's ambulance Community Services MFR division, including leadership, Medical First Responders, apprentices, and recruits.
 
-![St John Ambulance Logo](https://www.sja.org.uk/globalassets/images/logos/sja-logo.png)
+![St John Ambulance Logo](static/logo-full.svg)  
+
 The site is available at [mfr.sjahamilton.ca](https://mfr.sjahamilton.ca).
 
 ## Features
