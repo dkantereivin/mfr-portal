@@ -1,19 +1,9 @@
-import { localTime, parseUtc } from "$lib/utils/dates";
+import { localTime } from "$lib/utils/dates";
 import { IUser } from "./user.model";
-import type { UserType } from "./user.model.server";
 import { prop, type Ref } from "@typegoose/typegoose";
 import { INfcTag } from "./nfc.model";
-import type { NfcTagType } from "./nfc.model.server";
-import type { ObjectId } from "mongoose";
-import { browser } from "$app/environment";
-import type { AttendanceCodeType } from "./attendance.model.server";
+import { randomString } from "$lib/utils/misc";
 
-// let User: UserType, NfcTag: NfcTagType, AttendanceCode: AttendanceCodeType;
-// if (!browser) {
-//     AttendanceCode = (await import("./attendance.model.server")).AttendanceCode;
-//     NfcTag = (await import("./nfc.model.server")).NfcTag;
-//     User = (await import("./user.model.server")).User;
-// }
 
 class AttendanceAuthorization {
     @prop({ref: () => IUser})
@@ -53,16 +43,10 @@ export class Attendance {
     //             return `Checked in at ${parseUtc(this.timestamp).format()} using NFC tag ${nfc?.name}.`
     //     }
     // }
-
-    // static async appendToUser(userId: ObjectId, attendance: Attendance) {
-    //     const user = await User.findById(userId);
-    //     user!.attendance.push(attendance);
-    //     await user!.save();
-    // }
 }
 
 export class IAttendanceCode {
-    @prop({required: true, type: String})
+    @prop({required: true, type: String, index: true, default: () => randomString(32)})
     code!: string;
 
     @prop({required: true, ref: () => 'IUser'})

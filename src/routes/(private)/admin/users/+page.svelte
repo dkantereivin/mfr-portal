@@ -89,8 +89,8 @@
                     <Input type="email" id="email" name="email" bind:value={userEditModalSelection.email} required readonly/>
                 </div>
                 <div>
-                    <Label for="allianceNumber">Alliance Number (SJA ID)</Label>
-                    <Input type="text" id="allianceNumber" name="allianceNumber" bind:value={userEditModalSelection.contId} required />
+                    <Label for="contId">Alliance Number (SJA ID)</Label>
+                    <Input type="text" id="contId" name="contId" bind:value={userEditModalSelection.contId} required />
                 </div>
                 <div>
                     <Label for="role">Rank</Label>

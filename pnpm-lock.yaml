@@ -8,7 +8,7 @@ specifiers:
   '@sveltejs/adapter-node': ^1.1.7
   '@sveltejs/adapter-vercel': ^2.0.2
   '@sveltejs/kit': ^1.5.2
-  '@typegoose/typegoose': ^10.3.0
+  '@typegoose/typegoose': ^10.3.2
   '@types/google-spreadsheet': ^3.3.1
   '@types/lodash': ^4.14.191
   '@types/node': ^18.11.18
@@ -32,6 +32,7 @@ specifiers:
   postcss: ^8.4.21
   prettier: ^2.8.0
   prettier-plugin-svelte: ^2.8.1
+  superjson: ^1.12.2
   svelte: ^3.54.0
   svelte-check: ^2.9.2
   tailwindcss: ^3.2.4
@@ -44,7 +45,7 @@ specifiers:
 
 dependencies:
   '@sveltejs/adapter-vercel': 2.0.2_@sveltejs+kit@1.5.2
-  '@typegoose/typegoose': 10.3.0_mongoose@6.10.2
+  '@typegoose/typegoose': 10.3.2_mongoose@6.10.2
   awesome-qr: 2.1.5-rc.0
   dayjs: 1.11.7
   google-auth-library: 8.7.0
@@ -52,6 +53,7 @@ dependencies:
   ioredis: 5.3.1
   lodash: 4.17.21
   mongoose: 6.10.2
+  superjson: 1.12.2
 
 devDependencies:
   '@faker-js/faker': 7.6.0
@@ -1382,8 +1384,8 @@ packages:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
     dev: true
 
-  /@typegoose/typegoose/10.3.0_mongoose@6.10.2:
-    resolution: {integrity: sha512-5D7a4Jd1CJNrQRa/hwSY/Y13xo9cZWFcd/tCh+y+KgEMhNIlH6vPmlWcynQfjTZo1wTQ7YzyUGnmMyPb1e6LYw==}
+  /@typegoose/typegoose/10.3.2_mongoose@6.10.2:
+    resolution: {integrity: sha512-9GMmUF9ljr/oJChbRmDPCkRyP7I1OImiL3dmW/waopVghIXZ0xc6T7i8RjWvhj40sa0ExDCykR8BBLhyDJN/nw==}
     engines: {node: '>=14.17.0'}
     peerDependencies:
       mongoose: ~6.10.0
@@ -1982,6 +1984,13 @@ packages:
   /cookie/0.5.0:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
     engines: {node: '>= 0.6'}
+
+  /copy-anything/3.0.3:
+    resolution: {integrity: sha512-fpW2W/BqEzqPp29QS+MwwfisHCQZtiduTe/m8idFo0xbti9fIZ2WVhAsCv4ggFVH3AgCkVdpoOCtQC6gBrdhjw==}
+    engines: {node: '>=12.13'}
+    dependencies:
+      is-what: 4.1.8
+    dev: false
 
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
@@ -2802,6 +2811,11 @@ packages:
   /is-stream/2.0.1:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
+    dev: false
+
+  /is-what/4.1.8:
+    resolution: {integrity: sha512-yq8gMao5upkPoGEU9LsB2P+K3Kt8Q3fQFCGyNCWOAnJAMzEXVV9drYb0TXr42TTliLLhKIBvulgAXgtLLnwzGA==}
+    engines: {node: '>=12.13'}
     dev: false
 
   /isexe/2.0.0:
@@ -3646,6 +3660,13 @@ packages:
     resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
     dev: false
     optional: true
+
+  /superjson/1.12.2:
+    resolution: {integrity: sha512-ugvUo9/WmvWOjstornQhsN/sR9mnGtWGYeTxFuqLb4AiT4QdUavjGFRALCPKWWnAiUJ4HTpytj5e0t5HoMRkXg==}
+    engines: {node: '>=10'}
+    dependencies:
+      copy-anything: 3.0.3
+    dev: false
 
   /supports-color/7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
