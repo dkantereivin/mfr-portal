@@ -1,7 +1,12 @@
+import { fetchSecret } from '$lib/server/doppler';
 import mongoose from 'mongoose';
 
 console.log('Connecting to MongoDB...');
-const { DATABASE_URL } = await import('$env/static/private');
+const DATABASE_URL = await fetchSecret('DATABASE_URL');
+if (!DATABASE_URL) {
+    throw new Error('Unable to fetch DATABASE_URL from Doppler.');
+}
+
 mongoose.set('strictQuery', true);
 await mongoose.connect(DATABASE_URL)
     .then(() => console.log('Connected to MongoDB.'))
