@@ -11,4 +11,3 @@ vite.config.ts.timestamp-*
 .idea
 .vscode
 credentials.json
-.vercel
