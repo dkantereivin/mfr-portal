@@ -27,7 +27,6 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     }
 
     let user = await User.findOne({email: data.email});
-    console.log(`User: ${user}`)
 
     if (user && refreshToken) {
         user.google = {id: data.id, refreshToken};
@@ -60,7 +59,7 @@ export async function GET({url, cookies}: RequestEvent): Promise<Response> {
     const sessionId = randomString(32);
     const TTL = 60 * 60 * 24 * 14; // 14 days (in seconds)
 
-    await redis.set(sessionKey(sessionId), user.toJSON(), "EX", TTL);
+    await redis.set(sessionKey(sessionId), JSON.stringify(user.toJSON()), "EX", TTL);
     cookies.set(SESSION_COOKIE_ID, sessionId, hardenedCookie());
 
     const redirectTo = cookies.get(LOGIN_REDIRECT_TO) ?? "/dashboard";
