@@ -8,6 +8,7 @@ services:
       args:
         - ORIGIN=${ORIGIN-"https://mfr.sjahamilton.ca"}
         - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+      network: host
     ports:
       - '3000:3000'
     environment:
