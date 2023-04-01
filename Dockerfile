@@ -6,6 +6,7 @@ ARG ENVIRONMENT=staging
 
 WORKDIR /home/app
 
+RUN echo 'http://dl-4.alpinelinux.org/alpine/v3.15/main' >> /etc/apk/repositories
 RUN apk add --no-cache python3 g++ make curl && \
   curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 RUN apk add --no-cache --virtual cairo-dev-1.17.6-r3 pango-dev libjpeg-turbo-dev giflib-dev libpng-dev pixman xproto
