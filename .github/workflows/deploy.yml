@@ -1,7 +1,6 @@
 name: Deploy via SSH
 
 on: [push]
-branches: [master]
 
 jobs:
   build:
