@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ORIGIN=${ORIGIN-"https://mfr.sjahamilton.ca"}
+        - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+    restart: always
+    depends_on:
+      - mongo
+      - redis
+  
+  mongo:
+    image: mongo:6.0
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb:/data/db
+      - mongodb_config:/data/configdb
+      - ./devops/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=superadmin
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE_NAME}
+    restart: always
+
+  redis:
+    image: redis:7.0-alpine
+    command: redis-server --save 60 1 --loglevel warning
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_persist:/data
+    restart: always
+
+  nginx:
+    image: nginx:1.22-alpine
+    volumes:
+      - ./devops/nginx/templates:/etc/nginx/templates
+ 
+volumes:
+  mongodb:
+  mongodb_config:
+  redis_persist:
