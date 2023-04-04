@@ -25,4 +25,4 @@ jobs:
           port: 22
           script: |
             cd ~/Portal
-            doppler run --command "docker compose --file docker-compose.prod.yaml up --build -d"
+            doppler run --token ${{ secrets.DOPPLER_TOKEN }} -- docker compose --file "docker-compose.prod.yaml" up --build -d
