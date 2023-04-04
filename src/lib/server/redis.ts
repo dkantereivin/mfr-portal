@@ -2,8 +2,8 @@ import Redis from 'ioredis';
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 
-const fallbackUrl = process.env.NODE_ENV === 'prd' ? 'redis://redis:6379' : 'redis://localhost:6379';
-const url = env.REDIS_URL ?? fallbackUrl;
+const fallbackUrl = process.env.NODE_ENV === 'production' ? 'redis://redis:6379' : 'redis://localhost:6379';
+const url = 'redis://redis:6370' ?? env.REDIS_URL ?? fallbackUrl;
 export const redis = new Redis(url, { lazyConnect: true });
 if (!building) {
 	await redis.connect();
