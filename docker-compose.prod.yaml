@@ -6,14 +6,19 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - ORIGIN=${ORIGIN-"https://mfr.sjahamilton.ca"}
-        - DOPPLER_TOKEN=${DOPPLER_TOKEN}
-      network: host
+        - DOPPLER_TOKEN_BUILD=${DOPPLER_TOKEN_BUILD}
     ports:
       - '3000:3000'
     environment:
       - NODE_ENV=production
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN}
+      - DATABASE_URL
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
+      - GOOGLE_OAUTH_CALLBACK_URI
+      - GOOGLE_SERVICE_ACCOUNT
+      - ORIGIN
+      - REDIS_URL
+      - PUBLIC_BASE_URL
     restart: always
     depends_on:
       - mongo
@@ -31,6 +36,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=superadmin
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_DATABASE_NAME}
+      - MONGO_DATABASE_USERNAME=${MONGO_DATABASE_USERNAME}
+      - MONGO_DATABASE_PASSWORD=${MONGO_DATABASE_PASSWORD}
     restart: always
 
   redis:

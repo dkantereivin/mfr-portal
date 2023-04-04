@@ -1,8 +1,9 @@
 import Redis from 'ioredis';
 import { building } from '$app/environment';
-import { fetchSecret } from './doppler';
+import { env } from '$env/dynamic/private';
 
-const url = (await fetchSecret('REDIS_URL')) ?? 'redis://localhost:6379';
+const fallbackUrl = process.env.NODE_ENV === 'prd' ? 'redis://redis:6379' : 'redis://localhost:6379';
+const url = env.REDIS_URL ?? fallbackUrl;
 export const redis = new Redis(url, { lazyConnect: true });
 if (!building) {
 	await redis.connect();

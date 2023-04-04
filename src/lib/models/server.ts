@@ -1,11 +1,12 @@
-import { fetchSecret } from '$lib/server/doppler';
 import mongoose from 'mongoose';
 import { building } from '$app/environment';
+import { env } from '$env/dynamic/private';
 
 mongoose.set('strictQuery', true);
 if (!building) {
 	console.log('Connecting to MongoDB...');
-	const DATABASE_URL = await fetchSecret('DATABASE_URL');
+	const DATABASE_URL = env.DATABASE_URL;
+	console.log(DATABASE_URL);
 	if (!DATABASE_URL) {
 		throw new Error('Unable to fetch DATABASE_URL from Doppler.');
 	}

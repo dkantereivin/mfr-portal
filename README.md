@@ -75,9 +75,8 @@ using Docker and Docker Compose.
 To simplify this as much as possible,
 I use Doppler to manage secrets (i.e. passwords, API keys, etc.)
 in development and production environemnts.
-Rather than use their environment-variable based approach
-(which requires special work to integrate with SvelteKit's build tool, `vite`),
-I instead call their API using custom code in `src/lib/server/doppler.ts`.
+This uses their environment variable based approach,
+where the Doppler CLI is installed within the container.
 
 As such, the only following environment variables are required in the container itself:
 

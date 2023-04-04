@@ -1,7 +1,7 @@
+import { env } from '$env/dynamic/private';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { getSecret } from '../doppler';
 
-const GOOGLE_SERVICE_ACCOUNT = await getSecret('GOOGLE_SERVICE_ACCOUNT');
+const GOOGLE_SERVICE_ACCOUNT = env.GOOGLE_SERVICE_ACCOUNT;
 if (!GOOGLE_SERVICE_ACCOUNT) {
 	throw new Error('GOOGLE_SERVICE_ACCOUNT not found.');
 }

@@ -27,7 +27,7 @@ const defaultOptions = {
 
 type DopplerConfig = 'dev' | 'stg' | 'prd';
 const activeConfig = (): DopplerConfig => {
-	if (['dev', 'stg', 'prd'].includes(NODE_ENV)) {
+	if (['dev', 'stg', 'prd'].includes(NODE_ENV!)) {
 		console.log(NODE_ENV);
 		return <DopplerConfig>NODE_ENV;
 	}

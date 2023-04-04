@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { PUBLIC_BASE_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { AwesomeQR } from 'awesome-qr';
 	import { FAVICON } from '$lib/components/DataUris';
 
 	export let data: PageData;
 
-	const url = `${PUBLIC_BASE_URL}/attendance/checkin?code=${data.code}`;
+	const url = `${env.PUBLIC_BASE_URL}/attendance/checkin?code=${data.code}`;
 
 	const qrTemplate = new AwesomeQR({
 		text: url,
