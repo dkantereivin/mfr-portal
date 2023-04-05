@@ -69,7 +69,7 @@ services:
       - web-root:/var/www/certbot
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-    command: certonly --webroot --webroot-path=/var/www/certbot --email ${CERTBOT_EMAIL} --agree-tos --staging -d ${DOMAIN} -d www.${DOMAIN}
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ${CERTBOT_EMAIL} --agree-tos --force-renewal -d ${DOMAIN} -d www.${DOMAIN}
  
 volumes:
   mongodb:
