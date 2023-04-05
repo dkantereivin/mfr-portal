@@ -52,10 +52,29 @@ services:
   nginx:
     image: nginx:1.22-alpine
     volumes:
+      - web-root:/var/www/html
       - ./devops/nginx/templates:/etc/nginx/templates
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - app
     restart: always
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - web-root:/var/www/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    command: certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL} --agree-tos --staging -d ${DOMAIN} -d www.${DOMAIN}
  
 volumes:
   mongodb:
   mongodb_config:
   redis_persist:
+  certbot-etc:
+  certbot-var:
+  web-root:
