@@ -52,7 +52,7 @@ services:
   nginx:
     image: nginx:1.22-alpine
     volumes:
-      - web-root:/var/www/html
+      - web-root:/var/www/certbot
       - ./devops/nginx/templates:/etc/nginx/templates
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
@@ -66,10 +66,10 @@ services:
   certbot:
     image: certbot/certbot
     volumes:
-      - web-root:/var/www/html
+      - web-root:/var/www/certbot
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-    command: certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL} --agree-tos --force-renewal -d ${DOMAIN} -d www.${DOMAIN}
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ${CERTBOT_EMAIL} --agree-tos --staging -d ${DOMAIN} -d www.${DOMAIN}
  
 volumes:
   mongodb:
