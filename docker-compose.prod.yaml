@@ -53,6 +53,7 @@ services:
     image: nginx:1.22-alpine
     volumes:
       - ./devops/nginx/templates:/etc/nginx/templates
+    restart: always
  
 volumes:
   mongodb:
