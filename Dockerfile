@@ -18,6 +18,8 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN doppler run -- pnpm build
 
+ENV PROTOCOL_HEADER="X-Forwarded-Proto"
+ENV HOST_HEADER="X-Forwarded-Host"
 CMD ["pnpm", "start"]
 
 # partially optimized production stage
