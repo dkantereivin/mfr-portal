@@ -70,6 +70,20 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
     command: certonly --webroot --webroot-path=/var/www/certbot --email ${CERTBOT_EMAIL} --agree-tos --force-renewal --non-interactive -d ${DOMAIN} -d www.${DOMAIN}
+
+  mongo-express:
+    image: mongo-express:0.54.0
+    ports:
+      - '8081:8081'
+    environment:
+      - ME_CONFIG_MONGODB_URL=${DATABASE_URL}
+      - ME_CONFIG_BASICAUTH=true
+      - ME_CONFIG_BASICAUTH_USERNAME=${ME_WEB_USERNAME}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${ME_WEB_PASSWORD}
+    restart: unless-stopped
+    depends_on:
+      - mongo
+      
  
 volumes:
   mongodb:
