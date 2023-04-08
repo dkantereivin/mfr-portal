@@ -10,10 +10,7 @@
 
 	const qrTemplate = new AwesomeQR({
 		text: url,
-		logoImage: FAVICON,
-		logoScale: 0.3,
-		size: 600,
-		logoCornerRadius: 16
+		size: 600
 	});
 
 	const qr = qrTemplate.draw() as unknown as Promise<string>; // Promise<DataURI>
