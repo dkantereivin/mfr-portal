@@ -13,6 +13,26 @@ export class MasterSheet {
 		return await sheet.getRows();
 	}
 
+	static async getActiveRoster(): Promise<IUser[]> {
+		const doc = await loadSheet(SHEET_ID);
+		const sheet = doc.sheetsByIndex[0];
+		await sheet.loadHeaderRow(2);
+		const rows = await sheet.getRows();
+
+		const activeRows = rows.filter((row) => ['Active', 'LOA'].includes(row['Status']));
+		const users = activeRows.map((row) => ({
+			preferredName: row['Preferred Name'] ?? null,
+			firstName: row['Given Names'],
+			lastName: row['Surname'],
+			email: row['SJA Email Address'],
+			contId: row['Member ID'],
+			role: this.parseRank(row['Rank']),
+			dept: row['Leadership Department']
+		} as IUser));
+
+		return users;
+	}
+
 	static async getUserData(email: string) {
 		const doc = await loadSheet(SHEET_ID);
 		const sheet = doc.sheetsByIndex[0];

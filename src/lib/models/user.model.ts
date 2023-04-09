@@ -41,7 +41,7 @@ export class IUser {
 	@prop({ required: true, type: String, index: true })
 	lastName!: string;
 
-	@prop({ required: true, unique: true, type: String })
+	@prop({ required: true, unique: true, type: String, lowercase: true })
 	email!: string;
 
 	@prop({ require: false, type: String, index: true })
