@@ -22,4 +22,5 @@ if (!building) {
 export * from './user.model.server';
 export * from './nfc.model.server';
 export * from './attendance.model.server';
+export * from './event.model.server';
 export * from './client';

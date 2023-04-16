@@ -9,6 +9,7 @@ type EventMember = Pick<IUser, 'firstName' | 'lastName'> & {
 	meetAt?: 'unit' | 'event';
 };
 export interface CommunityEvent {
+	hashableFields: string;
 	eventNumber: string;
 	name: string;
 	date: Date;
@@ -40,16 +41,22 @@ export class EventSheet {
 						endTime: row['Approx.\nEnd'],
 						location: row['Event\nLocation'],
 						mfrs: this.parseMFRs(row['Medical First Responders']),
-						apps: this.parseApprentices(row['Apprentice'])
+						apps: this.parseApprentices(row['Apprentice']),
+						hashableFields: [
+							row['Event #'], row['Event'], row['Date'],
+							row['Meet @ St.John'], row['Meet @\nEvent'], row['Approx.\nEnd'],
+							row['Event\nLocation'],
+							row['Medical First Responders'], row['Apprentice']
+						].join('--$$--')
 					}
 			);
 	}
 
 	private static parseMFRs(raw: string): EventMember[] {
 		if (!raw) return [];
-		const specials = ['C', 'SUP', 'SUP-Trg', 'D', 'Team'];
+		const specials = ['C', 'C-Trg', 'SUP', 'SUP-Trg', 'D', 'S', 'Team'];
 		if (specials.every((s) => !raw.includes(s))) {
-			return this.parseApprentices(raw);
+			return this.parseApprentices(raw, 'MFR');
 		}
 
 		const lines = raw.split('\n').map((line) => line.trim());
@@ -84,7 +91,7 @@ export class EventSheet {
 		return members;
 	}
 
-	private static parseApprentices(raw: string): EventMember[] {
+	private static parseApprentices(raw: string, roleOverride?: string): EventMember[] {
 		if (!raw) return [];
 		const lines = raw.split('\n').map((line) => line.trim());
 		return lines.map((line) => {
@@ -92,7 +99,7 @@ export class EventSheet {
 			let lastName = rest.join(' ');
 			const meetAt = lastName.includes('*') && !lastName.includes('**') ? 'event' : 'unit';
 			lastName = lastName.replaceAll('*', '');
-			return { firstName, lastName, meetAt, role: 'Apprentice' };
+			return { firstName, lastName, meetAt, role: roleOverride ?? 'Apprentice' };
 		});
 	}
 }

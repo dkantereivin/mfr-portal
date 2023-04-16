@@ -5,3 +5,10 @@ export const randomString = (length: number): string => {
 	crypto.getRandomValues(arr);
 	return Array.from(arr, dec2hex).join('');
 };
+
+export const sha256 = (str: string): Promise<string> => {
+	const buffer = new TextEncoder().encode(str);
+	return crypto.subtle.digest('SHA-256', buffer).then((hash) => {
+		return Array.from(new Uint8Array(hash), dec2hex).join('');
+	});
+}

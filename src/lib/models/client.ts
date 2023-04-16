@@ -3,6 +3,7 @@ import type { Document, ObjectId } from 'mongoose';
 export * from './nfc.model';
 export * from './user.model';
 export * from './attendance.model';
+export * from './event.model';
 
 export const docToSerializableJSON = (doc: Document) => {
 	const json = doc.toObject();
