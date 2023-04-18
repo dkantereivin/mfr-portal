@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { error, redirect } from '@sveltejs/kit';
 import { LOGIN_REDIRECT_TO, standardCookie } from '$lib/utils/cookies';
-import { Attendance, NfcTag, TagActions } from '$lib/models/server';
+import { Attendance, NfcTag, TagActions, User } from '$lib/models/server';
 
 export const GET = (async ({ url, params, locals, cookies }) => {
 	if (!locals.authenticated) {
@@ -36,13 +36,16 @@ export const GET = (async ({ url, params, locals, cookies }) => {
 
 	switch (tag.action) {
 		case TagActions.ATTENDANCE:
-			await Attendance.appendToUser(locals.user!._id, <Attendance>{
-				method: 'nfc',
-				authorization: {
-					nfc: tag._id
-				},
-				timestamp: new Date()
-			});
+			await User.updateOne(
+				{ _id: locals.user!._id },
+				{ $push: { attendance: <Attendance>{
+					method: 'nfc',
+					authorization: {
+						nfc: tag._id
+					},
+					timestamp: new Date()
+				}}}
+			).exec();
 			throw redirect(307, '/attendance/success');
 	}
 }) satisfies RequestHandler;
