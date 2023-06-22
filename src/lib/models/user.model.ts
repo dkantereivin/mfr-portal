@@ -21,12 +21,21 @@ export enum LeadershipDepartment {
 	ALL = 'All'
 }
 
-class GoogleOAuth {
+export class GoogleOAuthInfo {
 	@prop({ required: true, type: String })
 	id!: string;
 
 	@prop({ required: true, type: String })
 	refreshToken!: string;
+
+	@prop({ required: true, type: String })
+	accessToken!: string;
+
+	@prop({ required: true, type: Number })
+	expiryDate!: number;
+
+	@prop({ required: true, type: String, default: [] }, PropType.ARRAY)
+	scopes!: string[];
 }
 
 export class IUser {
@@ -47,8 +56,8 @@ export class IUser {
 	@prop({ require: false, type: String, index: true })
 	contId?: string;
 
-	@prop({ required: false, _id: false, type: GoogleOAuth, select: false })
-	google?: GoogleOAuth;
+	@prop({ required: false, _id: false, type: GoogleOAuthInfo, select: false })
+	google?: GoogleOAuthInfo;
 
 	@prop({ required: true, default: Role.NONE, type: String, enum: Role })
 	role!: Role;

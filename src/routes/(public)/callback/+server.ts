@@ -28,12 +28,24 @@ export async function GET({ url, cookies }: RequestEvent): Promise<Response> {
 		throw error(400, 'No email provided by Google.');
 	}
 
-	let user = await User.findOne({ email: data.email });
+	let user = await User.findOne({ email: data.email }).select('+google');
 
-	if (user && refreshToken) {
-		user.google = { id: data.id, refreshToken };
+	if (user && refreshToken) { // user exists, but a new refresh token was provided and needs to be saved
+		user.google = {
+			id: data.id,
+			refreshToken,
+			accessToken: tokens.access_token!,
+			expiryDate: tokens.expiry_date!,
+			scopes: tokens.scope!.split(' ')
+		};
 		await user.save();
-	} else if (!user) {
+	} else if (user && user.google) { // user exists and has a previous refresh token, update access token
+		console.log(tokens.scope!.split(' '));
+		user.google.accessToken = tokens.access_token!;
+		user.google.expiryDate = tokens.expiry_date!;
+		user.google.scopes = tokens.scope!.split(' ');
+		await user.save();
+	} else if (!user) { // add a new user and save refresh token if provided
 		user = new User();
 		user.email = data.email;
 
@@ -52,7 +64,13 @@ export async function GET({ url, cookies }: RequestEvent): Promise<Response> {
 
 		// optionally add refresh token, don't throw if not
 		if (refreshToken) {
-			user.google = { id: data.id, refreshToken };
+			user.google = {
+				id: data.id,
+				refreshToken,
+				accessToken: tokens.access_token!,
+				expiryDate: tokens.expiry_date!,
+				scopes: tokens.scope!.split(' ')
+			};
 		}
 
 		await user.save();

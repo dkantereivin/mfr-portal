@@ -1,19 +1,20 @@
 import type { PageServerLoad } from './$types';
 import type { Dayjs } from 'dayjs';
-import { dayjs, localTime, parseDate, parseUtc, trainingTimeForDate } from '$lib/utils/dates';
+import { localTime, parseDate, parseUtc, trainingTimeForDate } from '$lib/utils/dates';
 import _ from 'lodash';
 import { requireManageAttendance, requireRank } from '$lib/utils/auth';
-import { Actions, error, fail } from '@sveltejs/kit';
+import { Actions, fail, redirect } from '@sveltejs/kit';
 import { HoursEntry, HoursSheet } from '$lib/server/sheets/hours';
 import {
 	Attendance,
-	docToSerializableJSON,
-	IUser,
 	LeadershipDepartment,
 	Role,
 	User
 } from '$lib/models/server';
 import type { Types } from 'mongoose';
+import { SHEETS_SCOPE } from '$lib/server/sheets/common';
+import { LOGIN_REDIRECT_TO, standardCookie } from '$lib/utils/cookies';
+import { createGoogleApiClient } from '$lib/server/googleAuth';
 
 const getNext = (dayOfWeek: number, from: Dayjs) => {
 	const next = from.weekday(dayOfWeek);
@@ -122,8 +123,22 @@ export const actions = {
 		return 'OK';
 	},
 
-	export: async ({ locals, request }) => {
+	export: async ({ url, locals, request, cookies }) => {
 		requireRank(locals.user!, Role.CORPORAL, LeadershipDepartment.ADMINISTRATION);
+
+		const {_id: userId} = locals.user!;
+
+		const adminUser = await User.findById(userId).select('+google');
+		if (!adminUser?.google?.scopes.includes(SHEETS_SCOPE)) {
+			const authUrl = `/login/upgrade?scopes=sheets`;
+
+			cookies.set(LOGIN_REDIRECT_TO, url.href, {
+				...standardCookie(),
+				maxAge: 5 * 60
+			});
+
+			throw redirect(302, authUrl)
+		}
 
 		const data = await request.formData();
 		const dateStr = <string>data.get('date');
@@ -157,7 +172,11 @@ export const actions = {
 		await Promise.all(promises);
 
 		const entry: HoursEntry = { date, hours };
-		await HoursSheet.addMultipleMemberHours(users, 'training', entry);
+
+		const client = createGoogleApiClient(adminUser.google);
+		const hoursSheet = new HoursSheet(client);
+
+		await hoursSheet.addMultipleMemberHours(users, 'training', entry);
 
 		return 'OK';
 	}

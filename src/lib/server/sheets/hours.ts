@@ -1,9 +1,10 @@
 import type { GoogleSpreadsheet } from 'google-spreadsheet';
-import { loadSheet } from '$lib/server/sheets/common';
+import { loadSheetOAuth } from '$lib/server/sheets/common';
 import { Role, IUser } from '$lib/models/client';
 import _ from 'lodash';
 import type { Dayjs } from 'dayjs';
 import { dayjs, parseDate, parseLocal } from '$lib/utils/dates';
+import type { OAuth2Client } from 'google-auth-library';
 
 const SHEET_ID = '1vbz3bY6ldRxfZ6y_h0W1rP1zTe1Y7oZs2rQIavnggSk';
 
@@ -29,13 +30,15 @@ const hasThreeCols = (category: keyof typeof ranges) => !['training', 'summary']
 
 // todo: consider making this non-static to allow sheet to be cached
 export class HoursSheet {
+	constructor(private authClient: OAuth2Client) {}
+
 	/**
 	 * Gets the appropriate sheet for a member. Does not load cells.
 	 * @param user Partial User object with names and contId.
 	 */
-	static async getMemberPage(user: PartialUser, doc?: GoogleSpreadsheet) {
+	async getMemberPage(user: PartialUser, doc?: GoogleSpreadsheet) {
 		if (!doc) {
-			doc = await loadSheet(SHEET_ID);
+			doc = await loadSheetOAuth(SHEET_ID, this.authClient);
 		}
 
 		const sheetName = `${user.lastName}, ${user.firstName}`;
@@ -55,7 +58,7 @@ export class HoursSheet {
 		return sheet;
 	}
 
-	static async getMemberHours(
+	async getMemberHours(
 		user: PartialUser,
 		category: keyof typeof ranges,
 		doc?: GoogleSpreadsheet
@@ -87,7 +90,7 @@ export class HoursSheet {
 
 	// note: there is a theoretical edge case: if the member is an MFR at entry time, but not at the time of an event, the hours will be counted as MFR hours.
 	// there is also a limitation of the software about officer apprentices, which is a TODO
-	static async addMemberHours(
+	async addMemberHours(
 		user: PartialUserWithRole,
 		category: Exclude<keyof typeof ranges, 'summary'>,
 		entry: HoursEntry,
@@ -154,12 +157,12 @@ export class HoursSheet {
 		await sheet.saveUpdatedCells();
 	}
 
-	static async addMultipleMemberHours(
+	async addMultipleMemberHours(
 		users: PartialUserWithRole[],
 		category: Exclude<keyof typeof ranges, 'summary'>,
 		entries: HoursEntry | HoursEntry[]
 	) {
-		const doc = await loadSheet(SHEET_ID);
+		const doc = await loadSheetOAuth(SHEET_ID, this.authClient);
 		const promises = users.map((user, idx) => {
 			const entry = Array.isArray(entries) ? entries[idx] : entries;
 			return this.addMemberHours(user, category, entry, doc);
@@ -167,7 +170,7 @@ export class HoursSheet {
 		await Promise.all(promises);
 	}
 
-	private static parseRow(row: [string, number] | [string, string, number]): HoursEntry {
+	private parseRow(row: [string, number] | [string, string, number]): HoursEntry {
 		let [date, event = undefined, hours = undefined] = row;
 		if (typeof event === 'number' || hours === undefined) {
 			[event, hours] = [undefined, <number>event];
