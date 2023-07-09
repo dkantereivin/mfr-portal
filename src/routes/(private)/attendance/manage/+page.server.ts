@@ -160,6 +160,13 @@ export const actions = {
 			}
 		}).select('+attendance');
 
+		const entry: HoursEntry = { date, hours };
+
+		const client = createGoogleApiClient(adminUser.google, userId);
+		const hoursSheet = new HoursSheet(client);
+
+		await hoursSheet.addMultipleMemberHours(users, 'training', entry);
+
 		let promises = [];
 		for (const user of users) {
 			for (const attendance of user.attendance) {
@@ -170,13 +177,6 @@ export const actions = {
 			promises.push(user.save());
 		}
 		await Promise.all(promises);
-
-		const entry: HoursEntry = { date, hours };
-
-		const client = createGoogleApiClient(adminUser.google);
-		const hoursSheet = new HoursSheet(client);
-
-		await hoursSheet.addMultipleMemberHours(users, 'training', entry);
 
 		return 'OK';
 	}

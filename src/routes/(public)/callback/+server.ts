@@ -40,7 +40,6 @@ export async function GET({ url, cookies }: RequestEvent): Promise<Response> {
 		};
 		await user.save();
 	} else if (user && user.google) { // user exists and has a previous refresh token, update access token
-		console.log(tokens.scope!.split(' '));
 		user.google.accessToken = tokens.access_token!;
 		user.google.expiryDate = tokens.expiry_date!;
 		user.google.scopes = tokens.scope!.split(' ');
