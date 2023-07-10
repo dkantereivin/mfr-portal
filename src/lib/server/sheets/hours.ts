@@ -95,11 +95,14 @@ export class HoursSheet {
 		category: Exclude<keyof typeof ranges, 'summary'>,
 		entry: HoursEntry,
 		doc?: GoogleSpreadsheet
-	) {
+	): Promise<number> {
 		// todo: remove code duplication
 		const sheet = await this.getMemberPage(user, doc);
 		const range = ranges[category];
 		await sheet.loadCells(range);
+		await sheet.loadCells(ranges['summary']); // always load summary cells
+		
+		const hoursBeforeChanges = sheet.getCellByA1('M7').value as number;
 
 		const [topLeft] = range.split(':');
 		const { rowIndex, columnIndex } = sheet.getCellByA1(topLeft);
@@ -109,9 +112,9 @@ export class HoursSheet {
 		}
 		entry.date = entry.date.tz();
 
-		let i;
+		let i; // search for the row to insert
 		for (i = rowIndex; i < sheet.rowCount; i++) {
-			let dateString = <string>sheet.getCell(i, columnIndex).value;
+			let dateString = <string>sheet.getCell(i, columnIndex).value?.toString();
 			if (!dateString) break;
 
 			// try to parse the date
@@ -120,9 +123,15 @@ export class HoursSheet {
 			}
 
 			// if only a month is given, assume the first of the month
-			const date = parseLocal(dateString).isValid()
-				? parseLocal(dateString)
-				: parseLocal(dateString + ' 1');
+			let date;
+			if (dayjs(dateString).isValid()) {
+				date = parseLocal(dateString);
+			} else if (dayjs(dateString + ' 1').isValid()) {
+				date = parseLocal(dateString + ' 1');
+			} else {
+				continue;
+			}
+
 			// if the date is still invalid, let's just keep looking.
 			if (!date.isValid()) continue;
 
@@ -130,6 +139,7 @@ export class HoursSheet {
 			if (date.isAfter(entry.date)) break;
 		}
 
+		// add more rows if needed
 		if (i === sheet.rowCount) {
 			await sheet.resize({ rowCount: ++sheet.rowCount });
 		}
@@ -144,7 +154,8 @@ export class HoursSheet {
 		}
 
 		// insert the new row
-		const formatted = entry.date.format(category === 'admin' ? 'MMM' : 'MMM D');
+		const formatted = entry.date.format(category === 'admin' ? 'MMM' : 'MMM D'); // special format for admin hours
+		// add the date, with an 'e' suffix if its an app on an event
 		sheet.getCell(i, columnIndex).value =
 			user.role === Role.APPRENTICE && category === 'events' ? formatted + 'e' : formatted;
 		if (hasThreeCols(category)) {
@@ -155,19 +166,30 @@ export class HoursSheet {
 		}
 
 		await sheet.saveUpdatedCells();
+
+		const hoursNow = sheet.getCellByA1('M7').value as number;
+		return hoursNow - hoursBeforeChanges;
 	}
 
+	// todo - urgent: deal with member no exist/page not found error
 	async addMultipleMemberHours(
 		users: PartialUserWithRole[],
 		category: Exclude<keyof typeof ranges, 'summary'>,
 		entries: HoursEntry | HoursEntry[]
-	) {
+	): Promise<{errors: string[]}> {
 		const doc = await loadSheetOAuth(SHEET_ID, this.authClient);
+		
 		const promises = users.map((user, idx) => {
 			const entry = Array.isArray(entries) ? entries[idx] : entries;
-			return this.addMemberHours(user, category, entry, doc);
+			return this.addMemberHours(user, category, entry, doc)
+				.catch((err) => {
+					return `Error adding hours for ${user.firstName} ${user.lastName}: ${err}`
+				});
 		});
 		await Promise.all(promises);
+		return {
+			errors: promises.filter(p => typeof p === 'string') as any[] as string[],
+		}
 	}
 
 	private parseRow(row: [string, number] | [string, string, number]): HoursEntry {

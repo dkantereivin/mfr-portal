@@ -165,7 +165,7 @@ export const actions = {
 		const client = createGoogleApiClient(adminUser.google, userId);
 		const hoursSheet = new HoursSheet(client);
 
-		await hoursSheet.addMultipleMemberHours(users, 'training', entry);
+		const exportResults = await hoursSheet.addMultipleMemberHours(users, 'training', entry);
 
 		let promises = [];
 		for (const user of users) {
@@ -178,7 +178,7 @@ export const actions = {
 		}
 		await Promise.all(promises);
 
-		return 'OK';
+		return exportResults;
 	}
 } satisfies Actions;
 

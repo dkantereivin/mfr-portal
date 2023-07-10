@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { getRank, ROLE_GROUPS } from '$lib/utils/auth';
 	import type { Role } from '$lib/models/client';
-	import { Popover, Tooltip } from 'flowbite-svelte';
+	import { Modal, Popover, Tooltip } from 'flowbite-svelte';
 	import _ from 'lodash';
-	import type { PageData } from './$types';
+	import type { ActionData, PageData } from './$types';
 	import { slide } from 'svelte/transition';
 	import { dayjs, parseLocal } from '$lib/utils/dates';
+	import { onMount } from 'svelte';
+
+	export let form: ActionData ;
 
 	export let data: PageData;
 	const { memberAttendance, finalizedDates } = data;
@@ -15,7 +18,23 @@
 			memberAttendance.filter(({ user }) => roles.includes(user.role)),
 			[({ user }) => -getRank(user.role), ({ user }) => user.lastName]
 		);
+
+	let formErrors = form?.errors as any as string[];
+	let errorModalOpen = !!(form && form.errors && formErrors.length > 0);
 </script>
+
+<Modal bind:open={errorModalOpen} title="Issues Exporting" autoclose>
+	<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+		There were some errors exporting the attendance.
+		Please see the below errors, and manually verify the attendance sheet for each of them:
+	</p>
+	<ul class="list-disc list-inside text-sm mt-2">
+		{#each formErrors as error}
+			<li>{error}</li>
+		{/each}
+	</ul>
+	<button on:click={() => errorModalOpen = false} class="mt-4">Close</button>
+</Modal>
 
 <main class="container sm:border sm:mx-auto mx-2 sm:rounded-lg">
 	<div class="relative overflow-x-auto shadow-md">
@@ -83,7 +102,7 @@
 							class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
 						>
 							<td>
-								<img src="/icons/ranks/{user.role.toLowerCase()}.svg" alt={user.role} class="w-4" />
+								<img src="/icons/ranks/{user.role.toLowerCase().replace(' ', '_')}.svg" alt={user.role} class="w-4" />
 							</td>
 							<td class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
 								{user.lastName}
