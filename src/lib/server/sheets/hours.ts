@@ -160,9 +160,9 @@ export class HoursSheet {
 			user.role === Role.APPRENTICE && category === 'events' ? formatted + 'e' : formatted;
 		if (hasThreeCols(category)) {
 			sheet.getCell(i, columnIndex + 1).value = entry.event!;
-			sheet.getCell(i, columnIndex + 2).value = entry.hours;
+			sheet.getCell(i, columnIndex + 2).numberValue = entry.hours;
 		} else {
-			sheet.getCell(i, columnIndex + 1).value = entry.hours;
+			sheet.getCell(i, columnIndex + 1).numberValue = entry.hours;
 		}
 
 		await sheet.saveUpdatedCells();
